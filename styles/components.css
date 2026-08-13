@@ -1,0 +1,921 @@
+/*
+ * Reusable UI pieces: buttons, inputs, cards, pills, badges, states.
+ * Shapes follow the EventMFU user API (see docs/DATA_MODEL.md).
+ */
+
+/* ── Buttons ────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: background-color var(--transition-fast),
+    color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+}
+
+.btn--outline {
+  background-color: var(--surface-color);
+  border-color: var(--input-border-color);
+  color: var(--text-color);
+}
+
+.btn--outline:hover:not(:disabled) {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn--ghost {
+  background-color: transparent;
+  color: var(--primary-color);
+  padding: var(--space-2) var(--space-3);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background-color: var(--primary-tint);
+}
+
+.btn--danger {
+  background-color: var(--danger-color);
+  color: var(--text-on-primary);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+}
+
+/* ── Form controls ──────────────────────────────────────────────────── */
+
+.field {
+  display: block;
+}
+
+.field + .field {
+  margin-top: var(--space-4);
+}
+
+.field__label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+}
+
+.field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field__icon {
+  position: absolute;
+  left: var(--space-3);
+  display: flex;
+  color: var(--muted-text-color);
+  pointer-events: none;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 13px var(--space-4);
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  transition: border-color var(--transition-fast);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--muted-text-color);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  border-width: 1.6px;
+}
+
+.input--with-icon {
+  padding-left: 42px;
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field__hint {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--muted-text-color);
+}
+
+.field__error {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--danger-color);
+}
+
+/* Rounded search box used in the header and on the home screen. */
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar__icon {
+  position: absolute;
+  left: var(--space-4);
+  display: flex;
+  color: var(--muted-text-color);
+  pointer-events: none;
+}
+
+.search-bar__input {
+  width: 100%;
+  height: 46px;
+  padding: 0 var(--space-4) 0 42px;
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-color);
+  color: var(--text-color);
+}
+
+.search-bar__input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────── */
+
+.card {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-lg);
+}
+
+.card--padded {
+  padding: var(--space-4);
+}
+
+.card--bordered {
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+
+/* Event feed row. Geometry copied from the Flutter EventCard widget:
+   white, radius 16, 12px padding, 92x72 thumbnail, 12px gutter. */
+.event-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3);
+  border: none;
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-color);
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.event-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover);
+  text-decoration: none;
+}
+
+.event-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-card__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* 16px, w700, single line with an ellipsis — as in the widget. */
+.event-card__title {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  margin: var(--space-1) 0 0;
+  color: var(--muted-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-card__meta svg {
+  flex: 0 0 auto;
+}
+
+.event-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: 6px;
+}
+
+.event-card__venue {
+  margin: 0;
+}
+
+/* Tall card in the horizontal rail — the home page's _heroCard. */
+.event-hero {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 280px;
+  width: 280px;
+  border-radius: 18px;
+  background-color: var(--surface-color);
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.event-hero:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  text-decoration: none;
+}
+
+.event-hero__body {
+  padding: 10px var(--space-3);
+}
+
+.event-hero__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-1);
+  color: var(--muted-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-hero__meta svg {
+  flex: 0 0 auto;
+}
+
+.event-hero__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* Poster. `poster_image_url` is nullable, so the initials tile is the normal
+   case rather than an error state. */
+.event-poster {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+  background: var(--gradient-brand);
+  color: var(--text-on-primary);
+  font-weight: var(--font-weight-black);
+}
+
+.event-poster--md {
+  width: 92px;
+  height: 72px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+}
+
+.event-poster--cover {
+  width: 100%;
+  height: 132px;
+  font-size: var(--font-size-xl);
+}
+
+.event-poster--banner {
+  width: 100%;
+  height: 260px;
+  border-radius: 18px;
+  font-size: 2.5rem;
+}
+
+/* Attendance points a User earns for attending (Event.points_value).
+   Gradient + soft shadow taken from the Flutter price pill. */
+.points-pill {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 5px var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--gradient-accent);
+  box-shadow: var(--shadow-primary);
+  color: var(--text-on-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+/* Upcoming / Completed style toggle — the _pill in MyBookingPage. */
+.pill-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+
+.pill-toggle__item {
+  padding: 10px 14px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-muted);
+  color: var(--text-color);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pill-toggle__item--active {
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
+}
+
+/* Day/month block on the left of a booking tile. */
+.date-block {
+  flex: 0 0 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  padding: var(--space-2) 0;
+  border-radius: var(--radius-md);
+  background-color: var(--background-color);
+}
+
+.date-block__day {
+  font-size: 17px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+}
+
+.date-block__month {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+/* Grey row with a white icon square — the SettingsTile widget. */
+.settings-tile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.settings-tile:hover {
+  background-color: var(--surface-muted);
+  text-decoration: none;
+}
+
+.settings-tile__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background-color: var(--surface-color);
+}
+
+.settings-tile__chevron {
+  margin-left: auto;
+  color: var(--text-secondary);
+}
+
+/* ── Navigation items (sidebar + drawer) ────────────────────────────── */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.nav-item:hover {
+  background-color: var(--surface-muted);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.nav-item--active {
+  background-color: var(--primary-tint);
+  color: var(--primary-color);
+}
+
+.nav-item__badge {
+  margin-left: auto;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--danger-color);
+  color: var(--text-on-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+}
+
+/* ── Pills, chips and badges ────────────────────────────────────────── */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-muted);
+  color: var(--text-color);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pill--active {
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-color);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.badge--success {
+  background-color: var(--success-surface);
+  color: var(--success-text);
+}
+
+.badge--warning {
+  background-color: var(--warning-surface);
+  color: var(--warning-text);
+}
+
+.badge--danger {
+  background-color: var(--danger-surface);
+  color: var(--danger-text);
+}
+
+.badge--info {
+  background-color: var(--primary-tint);
+  color: var(--primary-color);
+}
+
+.badge--neutral {
+  background-color: var(--surface-muted);
+  color: var(--text-secondary);
+}
+
+/* ── States ─────────────────────────────────────────────────────────── */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  color: var(--muted-text-color);
+}
+
+.empty-state__icon {
+  color: var(--input-border-color);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  color: var(--muted-text-color);
+}
+
+.spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: var(--radius-pill);
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Event detail ───────────────────────────────────────────────────── */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.back-link__icon {
+  transform: rotate(180deg);
+}
+
+.event-detail__header {
+  margin-bottom: var(--space-5);
+}
+
+/* Title block sits under the banner with the page's 16px gutter, matching
+   the Padding.fromLTRB(16, 16, 16, 24) in the Flutter detail page. */
+.event-detail__intro {
+  padding-top: var(--space-4);
+}
+
+.event-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.event-detail__intro h1 {
+  margin-bottom: 6px;
+}
+
+.event-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-1);
+  color: var(--text-secondary);
+}
+
+.event-detail__meta svg {
+  flex: 0 0 auto;
+  color: var(--muted-text-color);
+}
+
+.event-detail__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: var(--space-6);
+}
+
+.event-detail__main > .page-section:first-child {
+  margin-top: 0;
+}
+
+/* ── Booking panel ──────────────────────────────────────────────────── */
+
+.booking-panel {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-6));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.booking-panel__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.booking-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+/* Booking.qr_token — scanned by check-in staff on the day. */
+.qr-token {
+  padding: var(--space-3);
+  border: 1px dashed var(--input-border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-subtle);
+  text-align: center;
+}
+
+.qr-token__label {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-text-color);
+}
+
+.qr-token__value {
+  margin: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-weight: var(--font-weight-bold);
+  word-break: break-all;
+}
+
+.notice {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.notice--success {
+  background-color: var(--success-surface);
+  color: var(--success-text);
+}
+
+.notice--info {
+  background-color: var(--primary-tint);
+  color: var(--primary-color);
+}
+
+/* ── Organizers ─────────────────────────────────────────────────────── */
+
+.organizer-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.organizer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+}
+
+.organizer__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-brand);
+  color: var(--text-on-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.organizer__name,
+.organizer__role {
+  display: block;
+}
+
+.organizer__name {
+  font-weight: var(--font-weight-semibold);
+}
+
+.organizer__role {
+  font-size: var(--font-size-sm);
+}
+
+/* ── Q&A ────────────────────────────────────────────────────────────── */
+
+.qa-item__question {
+  margin: 0 0 var(--space-1);
+  font-weight: var(--font-weight-semibold);
+}
+
+.qa-item__meta {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.qa-item__answer {
+  margin-top: var(--space-3);
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--primary-tint);
+}
+
+.qa-form {
+  margin-top: var(--space-3);
+}
+
+.qa-form .btn {
+  margin-top: var(--space-3);
+}
+
+/* ── Reviews ────────────────────────────────────────────────────────── */
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.stars__on {
+  color: var(--star-color);
+}
+
+.stars__off {
+  color: var(--border-color);
+}
+
+.stars--input .stars__option {
+  cursor: pointer;
+}
+
+.stars--input .stars__option:hover .stars__off {
+  color: var(--star-color);
+  opacity: 0.5;
+}
+
+.stars--input :focus-visible + span + svg,
+.stars--input input:focus-visible ~ svg {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.review__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.review-form {
+  margin-top: var(--space-3);
+}
+
+.review-form h3 {
+  margin-bottom: var(--space-4);
+}
+
+.review-form .btn {
+  margin-top: var(--space-4);
+}
+
+/* ── Modal ──────────────────────────────────────────────────────────── */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background-color: rgba(18, 18, 18, 0.45);
+}
+
+.modal__panel {
+  position: relative;
+  width: min(440px, 100%);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background-color: var(--surface-color);
+  box-shadow: var(--shadow-raised);
+}
+
+.modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.modal__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+/* ── Feed ───────────────────────────────────────────────────────────── */
+
+.feed-search {
+  margin-bottom: var(--space-5);
+  max-width: 520px;
+}

@@ -1,0 +1,190 @@
+/*
+ * Breakpoints
+ *   > 1024px  desktop / laptop — header + fixed sidebar
+ *   ≤ 1024px  tablet          — sidebar collapses into a drawer
+ *   ≤ 768px   small tablet    — bottom navigation appears (mobile app layout)
+ *   ≤ 480px   phone           — single column, tightened spacing
+ */
+
+@media (max-width: 1280px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .app-sidebar {
+    display: none;
+  }
+
+  .app-header__menu-button {
+    display: inline-flex;
+  }
+
+  .app-main {
+    padding: var(--space-5) var(--space-5) var(--space-8);
+  }
+
+  .drawer-overlay--visible {
+    display: block;
+  }
+
+  .grid--cards {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 60px;
+  }
+
+  .app-header {
+    padding: 0 var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .app-header__search {
+    display: none;
+  }
+
+  .app-header__user-name {
+    display: none;
+  }
+
+  .app-header__user {
+    padding: 0;
+    background-color: transparent;
+  }
+
+  .mobile-nav {
+    display: block;
+  }
+
+  .app-main {
+    padding: var(--space-4) var(--space-4)
+      calc(var(--mobile-nav-height) + var(--space-6));
+  }
+
+
+  .page-section + .page-section {
+    margin-top: var(--space-6);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header__brand span {
+    display: none;
+  }
+
+  .app-main {
+    padding: var(--space-3) var(--space-3)
+      calc(var(--mobile-nav-height) + var(--space-5));
+  }
+
+  .grid--cards {
+    grid-template-columns: 1fr;
+  }
+
+  .event-card {
+    gap: var(--space-3);
+    padding: var(--space-3);
+  }
+
+  .event-card__heading {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .event-poster {
+    width: 56px;
+    height: 56px;
+    font-size: var(--font-size-md);
+  }
+
+  .btn {
+    padding: var(--space-3) var(--space-4);
+  }
+
+}
+
+/* Event detail: the booking panel drops below the content once there is no
+   room for a second column. */
+@media (max-width: 1024px) {
+  .event-detail__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-panel {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .event-detail__header {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .organizer-list {
+    flex-direction: column;
+  }
+
+  .organizer {
+    width: 100%;
+  }
+
+  .modal__footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal__footer .btn {
+    width: 100%;
+  }
+}
+
+/* Below the sidebar breakpoint the booking panel becomes a fixed action bar,
+   the way the Flutter detail page pins Book Now to the bottom. */
+@media (max-width: 768px) {
+  .booking-panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--mobile-nav-height);
+    z-index: 20;
+    order: 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: 0 -6px 18px rgba(18, 18, 18, 0.1);
+  }
+
+  /* Only the action row and status stay visible in the bar. */
+  .booking-panel .booking-panel__row:not(:first-child),
+  .booking-panel .qr-token {
+    display: none;
+  }
+
+  .event-detail__main {
+    padding-bottom: 120px;
+  }
+
+  .event-poster--banner {
+    height: 200px;
+    border-radius: var(--radius-lg);
+  }
+
+  .feed-search {
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-poster--banner {
+    height: 160px;
+  }
+
+  .event-hero {
+    flex-basis: 240px;
+    width: 240px;
+  }
+}

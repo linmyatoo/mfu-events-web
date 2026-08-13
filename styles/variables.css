@@ -1,0 +1,114 @@
+/*
+ * TripNest design tokens.
+ * Values are taken from the Flutter app (lib/src/core/theme/app_colors.dart
+ * and the ThemeData in lib/main.dart) so the web build keeps the same brand.
+ */
+
+:root {
+  /* Brand */
+  --primary-color: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-deep: #6366f1;
+  --primary-sky: #60a5fa;
+  --primary-dark: #1d4ed8;
+  --primary-navy: #1e3a8a;
+  --primary-tint: rgba(37, 99, 235, 0.12);
+
+  /* Brand gradients used by the logo, posters and points pills */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--primary-sky) 0%,
+    var(--primary-light) 50%,
+    var(--primary-deep) 100%
+  );
+  --gradient-accent: linear-gradient(135deg, var(--primary-sky), var(--primary-light));
+  --gradient-hero: linear-gradient(
+    180deg,
+    var(--primary-light) 0%,
+    var(--primary-dark) 55%,
+    var(--primary-navy) 100%
+  );
+
+  /* Surfaces */
+  --background-color: #f4f6f8;
+  --surface-color: #ffffff;
+  --surface-muted: #f2f4f7;
+  --surface-subtle: #f3f4f6;
+
+  /* Text */
+  --text-color: #121212;
+  --text-secondary: #5b5b5b;
+  --muted-text-color: #9aa0a6;
+  --text-on-primary: #ffffff;
+
+  /* Lines */
+  --border-color: #e6e8ec;
+  --input-border-color: #d1d5db;
+
+  /* Status */
+  --success-color: #22c55e;
+  --success-surface: #dcfce7;
+  --success-text: #16a34a;
+  --warning-color: #f59e0b;
+  --warning-surface: #fff3cd;
+  --warning-text: #b45309;
+  --danger-color: #ef4444;
+  --danger-surface: #ffe4e4;
+  --danger-text: #dc2626;
+  --star-color: #ffb300;
+
+  /* Radius — matches the BorderRadius values used across the mobile widgets */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+  --border-radius: var(--radius-md);
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* Typography */
+  --font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui,
+    -apple-system, sans-serif;
+  /* Sizes are the Flutter TextStyle values: body 14, card title 16,
+     section heading 18, page heading 22. */
+  --font-size-xs: 0.6875rem; /* 11 — date block month, badges */
+  --font-size-sm: 0.8125rem; /* 13 — price/points pill */
+  --font-size-base: 0.875rem; /* 14 — body, card meta */
+  --font-size-md: 1rem; /* 16 — card title, buttons */
+  --font-size-lg: 1.125rem; /* 18 — section heading */
+  --font-size-xl: 1.375rem; /* 22 — event detail title */
+  --font-size-2xl: 1.5rem; /* 24 — auth headings */
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 800;
+  --line-height-base: 1.5;
+
+  /* Elevation.
+     The mobile app draws flat white cards on the grey scaffold — no shadow at
+     all on EventCard, booking tiles or settings tiles. Only lifted surfaces
+     (dialogs, drawer) and the gradient pills carry a shadow. */
+  --shadow-card: none;
+  --shadow-hover: 0 4px 12px rgba(18, 18, 18, 0.08);
+  --shadow-raised: 0 12px 24px rgba(0, 0, 0, 0.12);
+  --shadow-primary: 0 2px 6px rgba(59, 130, 246, 0.3);
+
+  /* Layout metrics */
+  --header-height: 64px;
+  --sidebar-width: 248px;
+  --mobile-nav-height: 64px;
+  --content-max-width: 1200px;
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-base: 220ms ease;
+}

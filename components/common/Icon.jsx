@@ -1,0 +1,49 @@
+/**
+ * Inline SVG icon set.
+ *
+ * The mobile app uses Material icons; no icon library is allowed here, so the
+ * handful of glyphs the UI needs are drawn as paths. Add a new entry to
+ * `paths` rather than inlining an <svg> in a page.
+ */
+
+const paths = {
+  home: 'M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z',
+  ticket:
+    'M7 4h10a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V6a2 2 0 0 1 2-2z',
+  heart:
+    'M12 20s-7-4.35-7-9a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 4.65-7 9-7 9z',
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4 0-7 2.2-7 5v1h14v-1c0-2.8-3-5-7-5z',
+  search:
+    'M10.5 4a6.5 6.5 0 1 0 3.98 11.64l4.44 4.44 1.42-1.42-4.44-4.44A6.5 6.5 0 0 0 10.5 4zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z',
+  menu: 'M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z',
+  close:
+    'M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z',
+  star: 'm12 17.3-6.18 3.7 1.64-7.03L2 9.24l7.19-.61L12 2l2.81 6.63 7.19.61-5.46 4.73L18.18 21z',
+  place:
+    'M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z',
+  chevronRight: 'M9.3 6 8 7.4l4.6 4.6L8 16.6 9.3 18l6-6z',
+  sparkle:
+    'M12 2.5 14 9l6.5 2-6.5 2-2 6.5-2-6.5L3.5 11 10 9z',
+  calendar:
+    'M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zm12 8v9H5v-9z',
+};
+
+export default function Icon({ name, size = 22, className, ...rest }) {
+  const path = paths[name];
+  if (!path) return null;
+
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+      {...rest}
+    >
+      <path d={path} />
+    </svg>
+  );
+}
