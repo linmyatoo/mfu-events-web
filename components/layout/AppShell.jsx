@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Icon from '../common/Icon';
 import MobileNav from '../navigation/MobileNav';
 import NavList from '../navigation/NavList';
-import { primaryNavItems } from '../navigation/navItems';
+import { userNavItems } from '../navigation/navItems';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
@@ -13,10 +13,21 @@ import Sidebar from './Sidebar';
  * Application chrome shared by every page: header, sidebar, mobile drawer and
  * bottom navigation.
  *
- * `user` and `pointsBalance` are passed in so they can later come from
- * `GET /api/user/me` and `GET /api/user/me/points` without touching layout.
+ * `user` and `pointsBalance` come from `GET /api/user/me` and the derived
+ * points balance (see lib/points.js).
+ *
+ * `navItems` and `portals` are supplied per portal by its layout, so the same
+ * chrome serves the User, Organizer and Admin sections.
  */
-export default function AppShell({ children, user, pointsBalance = 0 }) {
+export default function AppShell({
+  children,
+  user,
+  pointsBalance = 0,
+  navItems = userNavItems,
+  portals = [],
+  portal = 'user',
+  sidebarNote,
+}) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
 
@@ -42,11 +53,13 @@ export default function AppShell({ children, user, pointsBalance = 0 }) {
       <Header
         user={user}
         pointsBalance={pointsBalance}
+        portals={portals}
+        portal={portal}
         onOpenMenu={() => setDrawerOpen(true)}
       />
 
       <div className="app-body">
-        <Sidebar user={user} />
+        <Sidebar user={user} navItems={navItems} note={sidebarNote} />
         <main className="app-main">{children}</main>
       </div>
 
@@ -82,11 +95,26 @@ export default function AppShell({ children, user, pointsBalance = 0 }) {
 
         <div className="app-sidebar__group">
           <p className="app-sidebar__label">Menu</p>
-          <NavList items={primaryNavItems} onNavigate={closeDrawer} />
+          <NavList items={navItems} onNavigate={closeDrawer} />
         </div>
+
+        {/* The header switcher is hidden below 1024px, so it lives here too. */}
+        {portals.length > 1 ? (
+          <div className="app-sidebar__group">
+            <p className="app-sidebar__label">Portal</p>
+            <NavList
+              items={portals.map((item) => ({
+                href: item.href,
+                label: item.label,
+                icon: item.id === 'admin' ? 'user' : item.id === 'organizer' ? 'calendar' : 'home',
+              }))}
+              onNavigate={closeDrawer}
+            />
+          </div>
+        ) : null}
       </div>
 
-      <MobileNav />
+      <MobileNav items={navItems} />
     </div>
   );
 }

@@ -1,6 +1,3 @@
-import AppShell from '../components/layout/AppShell';
-import { mockPoints, mockUser } from '../data/mockData';
-
 import '../styles/variables.css';
 import '../styles/globals.css';
 import '../styles/layout.css';
@@ -12,14 +9,15 @@ export const metadata = {
   description: 'Discover, book and attend university events.',
 };
 
+/**
+ * Root layout holds the document and the stylesheets only.
+ * The signed-in chrome (header, sidebar, mobile nav) lives in the `(app)`
+ * route group so that /login can render without it.
+ */
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <AppShell user={mockUser} pointsBalance={mockPoints.balance}>
-          {children}
-        </AppShell>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

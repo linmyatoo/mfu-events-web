@@ -4,6 +4,7 @@ import {
   bookingStatusMeta,
   formatEventWhen,
   initialsOf,
+  venueName,
 } from '../../lib/events';
 import Icon from '../common/Icon';
 import EventPoster from './EventPoster';
@@ -42,7 +43,7 @@ export default function EventCard({ event }) {
         <div className="event-card__footer">
           <span className="event-card__meta event-card__venue">
             <Icon name="place" size={16} />
-            {event.venue}
+            {venueName(event)}
           </span>
           {event.points_value > 0 ? (
             <span className="points-pill">+{event.points_value} pts</span>

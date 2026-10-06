@@ -17,6 +17,11 @@
     display: none;
   }
 
+  /* The drawer carries the portal links at this size — see AppShell. */
+  .portal-switch {
+    display: none;
+  }
+
   .app-header__menu-button {
     display: inline-flex;
   }

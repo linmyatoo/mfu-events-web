@@ -1,19 +1,25 @@
 import NavList from '../navigation/NavList';
-import { primaryNavItems } from '../navigation/navItems';
+import { userNavItems } from '../navigation/navItems';
 
 /** Desktop sidebar. Hidden below 1024px, where the drawer takes over. */
-export default function Sidebar({ user }) {
+export default function Sidebar({ user, navItems = userNavItems, note }) {
+  // `school` and `year` are only set on student/faculty rows.
+  const audience = [user.school, user.year].filter(Boolean).join(' and ');
+
   return (
     <aside className="app-sidebar" aria-label="Sidebar">
       <div className="app-sidebar__group">
         <p className="app-sidebar__label">Menu</p>
-        <NavList items={primaryNavItems} />
+        <NavList items={navItems} />
       </div>
 
       <div className="app-sidebar__cta">
-        <h3>Your feed</h3>
+        <h3>{note?.title ?? 'Your feed'}</h3>
         <p>
-          Showing events open to everyone, plus {user.school} and {user.year}.
+          {note?.body ??
+            (audience
+              ? `Showing events open to everyone, plus ${audience}.`
+              : 'Showing events open to everyone.')}
         </p>
       </div>
     </aside>

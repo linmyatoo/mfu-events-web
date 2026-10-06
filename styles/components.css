@@ -421,6 +421,44 @@
   color: var(--text-secondary);
 }
 
+/* Cancel row under a booking tile — the tile itself is the .event-card link,
+   which supplies its own padding, so only this row needs insets. */
+.booking-tile__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+/* Portal switcher in the header — only rendered when an account can reach
+   more than one of User / Organizer / Admin. */
+.portal-switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-muted);
+}
+
+.portal-switch__item {
+  padding: 6px var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.portal-switch__item:hover {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.portal-switch__item--active {
+  background-color: var(--surface-color);
+  color: var(--primary-color);
+}
+
 /* Grey row with a white icon square — the SettingsTile widget. */
 .settings-tile {
   display: flex;

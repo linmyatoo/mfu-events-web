@@ -1,50 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useActionState } from 'react';
 
+import { askQuestionAction } from '../../app/actions';
 import { formatDate } from '../../lib/events';
 import Button from '../common/Button';
 import EmptyState from '../common/EmptyState';
 
+const initialState = { error: null, message: null };
+
 /**
- * Public per-event Q&A (EventQuestion).
+ * Public per-event Q&A (EventQuestion) — POST /api/user/events/:id/questions.
  *
  * Anyone signed in can ask; only a Main or Co-Organizer can answer, so a new
- * question always starts unanswered. UI-only — this stands in for
- * POST /api/user/events/:id/questions.
+ * question always starts unanswered. The list re-renders from the server after
+ * the action revalidates the route.
  */
 export default function QuestionsSection({ event, user }) {
-  const [questions, setQuestions] = useState(event.questions);
-  const [text, setText] = useState('');
-  const [error, setError] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(submitEvent) {
-    submitEvent.preventDefault();
-
-    // Same guard as qaService.askQuestion.
-    if (!text.trim()) {
-      setError('Question text is required.');
-      return;
-    }
-
-    setQuestions((current) => [
-      ...current,
-      {
-        id: `local-q-${current.length + 1}`,
-        event_id: event.id,
-        user_id: user.id,
-        question_text: text.trim(),
-        answer_text: null,
-        answered_by: null,
-        created_at: new Date().toISOString(),
-        answered_at: null,
-      },
-    ]);
-    setText('');
-    setError(null);
-    setSubmitted(true);
-  }
+  const [state, formAction, pending] = useActionState(askQuestionAction, initialState);
+  const questions = event.questions ?? [];
 
   return (
     <section className="page-section" aria-labelledby="qa-heading">
@@ -85,38 +59,35 @@ export default function QuestionsSection({ event, user }) {
         </ul>
       )}
 
-      <form className="card card--padded qa-form" onSubmit={handleSubmit}>
+      <form className="card card--padded qa-form" action={formAction}>
+        <input type="hidden" name="eventId" value={event.id} />
+
         <div className="field">
           <label className="field__label" htmlFor="question-text">
             Ask the organizers
           </label>
           <textarea
             id="question-text"
+            name="text"
             className="textarea"
-            value={text}
-            onChange={(changeEvent) => {
-              setText(changeEvent.target.value);
-              setError(null);
-              setSubmitted(false);
-            }}
             placeholder="What would you like to know about this event?"
-            aria-invalid={error ? 'true' : undefined}
-            aria-describedby={error ? 'question-error' : undefined}
+            aria-invalid={state?.error ? 'true' : undefined}
+            aria-describedby={state?.error ? 'question-error' : undefined}
           />
-          {error ? (
+          {state?.error ? (
             <p className="field__error" id="question-error">
-              {error}
+              {state.error}
             </p>
           ) : null}
-          {submitted ? (
+          {state?.message ? (
             <p className="notice notice--success" role="status">
-              Question posted. An organizer will answer it here.
+              {state.message}
             </p>
           ) : null}
         </div>
 
-        <Button variant="primary" type="submit">
-          Post question
+        <Button variant="primary" type="submit" disabled={pending}>
+          {pending ? 'Posting…' : 'Post question'}
         </Button>
       </form>
     </section>

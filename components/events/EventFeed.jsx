@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 import EventCard from '../cards/EventCard';
@@ -12,11 +13,13 @@ import { isPastEvent } from '../../lib/events';
  * Event feed with the mobile home screen's shape: a search box, a horizontal
  * rail of highlighted events, then the vertical list.
  *
- * Filtering matches `eventService.feedForUser`, which searches the title
- * only — so the client-side filter here behaves the same as `?search=` will.
+ * Typing filters what is already loaded; submitting re-runs the query on the
+ * server through `?search=`. Both match on title only, exactly as
+ * `eventService.feedForUser` does, so the two never disagree.
  */
-export default function EventFeed({ events }) {
-  const [query, setQuery] = useState('');
+export default function EventFeed({ events, query: initialQuery = '' }) {
+  const router = useRouter();
+  const [query, setQuery] = useState(initialQuery);
 
   const { earning, upcoming, past } = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -46,6 +49,10 @@ export default function EventFeed({ events }) {
           id="feed-search"
           value={query}
           onChange={setQuery}
+          onSubmit={(value) => {
+            const trimmed = value.trim();
+            router.push(trimmed ? `/?search=${encodeURIComponent(trimmed)}` : '/');
+          }}
           placeholder="Search your events"
         />
       </div>

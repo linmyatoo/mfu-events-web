@@ -1,76 +1,63 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
+import { bookEventAction, cancelBookingAction } from '../../app/actions';
 import {
   BOOKING_STATUS,
+  bookingBlockedReason,
   bookingStatusMeta,
   formatDate,
-  isRegistrationClosed,
 } from '../../lib/events';
 import Button from '../common/Button';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';
 
 /**
- * Book / cancel panel.
+ * Book / cancel panel — POST /api/user/events/:id/book and
+ * POST /api/user/bookings/:id/cancel.
  *
- * Mirrors the guards in bookingService.createBooking + cancelBooking:
- *   - registration_deadline in the past → cannot book
- *   - user.booking_restricted           → cannot book
- *   - an active booking already exists  → cancel instead of book
- *   - only a `booked` row can be cancelled (not attended / no_show)
- *
- * UI-only: nothing is sent anywhere, the new state is held in React.
- * Capacity is not checked here because the feed does not return a booked
- * count — the server owns that rejection.
+ * The disabled states mirror the guards in bookingService so the common
+ * rejections never need a round trip; anything the client cannot know
+ * (capacity, audience) still comes back from the server as an error message.
  */
 export default function BookingPanel({ event, user }) {
-  const [booking, setBooking] = useState(event.myBooking);
+  const booking = event.myBooking;
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState(null);
+  const [pending, startTransition] = useTransition();
 
-  const registrationClosed = isRegistrationClosed(event);
-  const restricted = user.booking_restricted;
+  const blockedReason = bookingBlockedReason(event, user);
   const active = booking && booking.status !== BOOKING_STATUS.CANCELLED;
   const canCancel = booking?.status === BOOKING_STATUS.BOOKED;
 
-  function handleBook() {
-    setPending(true);
+  function run(action) {
     setNotice(null);
+    startTransition(async () => {
+      const result = await action();
+      setNotice(
+        result.error
+          ? { tone: 'info', text: result.error }
+          : { tone: 'success', text: result.message }
+      );
+    });
+  }
 
-    // Stands in for POST /api/user/events/:id/book.
-    setTimeout(() => {
-      setBooking({
-        id: `local-${event.id}`,
-        event_id: event.id,
-        user_id: user.id,
-        status: BOOKING_STATUS.BOOKED,
-        qr_token: `EVMFU-LOCAL-${event.id.toUpperCase()}`,
-        booked_at: new Date().toISOString(),
-        cancelled_at: null,
-        checked_in_at: null,
-      });
-      setPending(false);
-      setNotice({ tone: 'success', text: 'Booked. Show your QR token at check-in.' });
-    }, 400);
+  function handleBook() {
+    run(async () => {
+      const result = await bookEventAction(event.id);
+      return result.error
+        ? result
+        : { message: 'Booked. Show your check-in token on the day.' };
+    });
   }
 
   function handleCancel() {
     setConfirmOpen(false);
-    setPending(true);
-
-    // Stands in for POST /api/user/bookings/:id/cancel.
-    setTimeout(() => {
-      setBooking((current) => ({
-        ...current,
-        status: BOOKING_STATUS.CANCELLED,
-        cancelled_at: new Date().toISOString(),
-      }));
-      setPending(false);
-      setNotice({ tone: 'info', text: 'Booking cancelled.' });
-    }, 400);
+    run(async () => {
+      const result = await cancelBookingAction(booking.id, event.id);
+      return result.error ? result : { message: 'Booking cancelled.' };
+    });
   }
 
   const status = booking ? bookingStatusMeta(booking.status) : null;
@@ -119,7 +106,7 @@ export default function BookingPanel({ event, user }) {
             onClick={() => setConfirmOpen(true)}
             disabled={pending}
           >
-            {pending ? 'Cancelling…' : 'Cancel booking'}
+            {pending ? 'Working…' : 'Cancel booking'}
           </Button>
         ) : active ? (
           <p className="text-muted">
@@ -127,20 +114,21 @@ export default function BookingPanel({ event, user }) {
               ? 'You attended this event.'
               : 'This booking can no longer be changed.'}
           </p>
-        ) : restricted ? (
+        ) : blockedReason ? (
           <>
             <Button variant="primary" block disabled>
-              Booking restricted
+              Booking unavailable
             </Button>
             <p className="field__error">
-              Your account is restricted from booking new events. See your{' '}
-              <a href="/health">account health</a>.
+              {blockedReason}
+              {user.booking_restricted ? (
+                <>
+                  {' '}
+                  See your <a href="/health">account health</a>.
+                </>
+              ) : null}
             </p>
           </>
-        ) : registrationClosed ? (
-          <Button variant="primary" block disabled>
-            Registration closed
-          </Button>
         ) : (
           <Button variant="primary" block onClick={handleBook} disabled={pending}>
             <Icon name="ticket" size={18} />

@@ -1,6 +1,11 @@
 import Link from 'next/link';
 
-import { audienceLabel, formatDate, initialsOf } from '../../lib/events';
+import {
+  audienceLabel,
+  formatDate,
+  initialsOf,
+  venueName,
+} from '../../lib/events';
 import Icon from '../common/Icon';
 import EventPoster from './EventPoster';
 
@@ -25,7 +30,7 @@ export default function EventHeroCard({ event }) {
 
         <p className="event-hero__meta">
           <Icon name="place" size={16} />
-          {event.venue}
+          {venueName(event)}
         </p>
 
         <p className="event-hero__meta">
