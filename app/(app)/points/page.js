@@ -4,7 +4,7 @@ import { apiGet } from '../../../lib/api';
 import { formatDate } from '../../../lib/events';
 import { derivePoints } from '../../../lib/points';
 
-export const metadata = { title: 'Points · TripNest' };
+export const metadata = { title: 'Points · MFU-Events' };
 
 /**
  * Attendance points.

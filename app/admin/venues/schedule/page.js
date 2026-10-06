@@ -7,7 +7,7 @@ import PageContainer from '../../../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../../../lib/api';
 import { eventStatusMeta, formatEventWhen } from '../../../../lib/events';
 
-export const metadata = { title: 'Venue schedule · Admin · TripNest' };
+export const metadata = { title: 'Venue schedule · Admin · MFU-Events' };
 
 /**
  * GET /api/admin/venues/schedule — every venue with the events currently

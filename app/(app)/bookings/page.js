@@ -2,7 +2,7 @@ import BookingsList from '../../../components/bookings/BookingsList';
 import PageContainer from '../../../components/layout/PageContainer';
 import { apiGet } from '../../../lib/api';
 
-export const metadata = { title: 'My Bookings · TripNest' };
+export const metadata = { title: 'My Bookings · MFU-Events' };
 
 /**
  * GET /api/user/bookings — Booking rows with their Event embedded.

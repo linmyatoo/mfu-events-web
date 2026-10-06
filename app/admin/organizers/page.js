@@ -8,7 +8,7 @@ import PageContainer from '../../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../../lib/api';
 import { ORGANIZER_TYPE_LABELS } from '../../../lib/events';
 
-export const metadata = { title: 'Organizers · Admin · TripNest' };
+export const metadata = { title: 'Organizers · Admin · MFU-Events' };
 
 const FILTERS = [
   { value: '', label: 'All' },

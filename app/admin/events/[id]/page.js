@@ -21,9 +21,9 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   try {
     const event = await apiGet(`/api/admin/events/${id}`);
-    return { title: `${event.title} · Admin · TripNest` };
+    return { title: `${event.title} · Admin · MFU-Events` };
   } catch {
-    return { title: 'Event · Admin · TripNest' };
+    return { title: 'Event · Admin · MFU-Events' };
   }
 }
 

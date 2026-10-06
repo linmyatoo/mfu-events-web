@@ -4,7 +4,7 @@ import PageContainer from '../../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../../lib/api';
 import { formatDate, formatTime } from '../../../lib/events';
 
-export const metadata = { title: 'Activity · Admin · TripNest' };
+export const metadata = { title: 'Activity · Admin · MFU-Events' };
 
 /**
  * GET /api/admin/logs — `?type=` matches the prefix before the first dot in

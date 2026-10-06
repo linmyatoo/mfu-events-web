@@ -5,7 +5,7 @@ import PermissionNotice from '../../../components/admin/PermissionNotice';
 import PageContainer from '../../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../../lib/api';
 
-export const metadata = { title: 'Items · Admin · TripNest' };
+export const metadata = { title: 'Items · Admin · MFU-Events' };
 
 /**
  * GET /api/admin/items/inventory — every item with `allocated_quantity` and

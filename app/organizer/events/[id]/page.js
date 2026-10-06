@@ -22,9 +22,9 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   try {
     const event = await apiGet(`/api/organizer/events/${id}`);
-    return { title: `${event.title} · Organizer · TripNest` };
+    return { title: `${event.title} · Organizer · MFU-Events` };
   } catch {
-    return { title: 'Event · Organizer · TripNest' };
+    return { title: 'Event · Organizer · MFU-Events' };
   }
 }
 

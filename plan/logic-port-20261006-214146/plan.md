@@ -92,11 +92,18 @@ markup, because the underlying feature has no existing UI surface at all.
   exists; **no route in `backend/routes/admin.js` calls it** — this is a gap
   in the backend too, not just the frontend)
 - Target: no route at all under `app/admin/**` for either half.
-- **This is a feature-gap/scope question, not a "fix logic under existing
-  markup" task** — out of this plan's default scope. See
-  `phases/phase-4-scope-decision-point-events.md` for what would be required
-  if the user wants it built anyway (including a likely backend change,
-  which is outside "backend is shared and unmodified").
+- **DONE (2026-10-06)** — user explicitly authorized backend changes for this
+  gap (lifting "backend is shared and unmodified" for D4 only). Implemented:
+  `POST /api/admin/events` (admin-direct creation), `/events/:id/complete`
+  now triggers `proposeOrganizerPoints`, and a new `/api/admin/points/*`
+  route group (`pending`, `:id/resolve`, `sync`) added to `admin.js`, all
+  reusing the existing `pointsService.js` unchanged. New frontend pages
+  `app/admin/events/new/page.js` and `app/admin/points/page.js`, plus
+  `app/admin/actions.js` server actions. Verified end-to-end against a live
+  backend (propose → approve/adjust/reject → balance change confirmed via
+  `pointsService.balanceFor`/`historyFor`). See
+  `phases/phase-4-scope-decision-point-events.md` for exact files/lines and
+  verification evidence.
 
 ## Verified non-issues — do not change these
 

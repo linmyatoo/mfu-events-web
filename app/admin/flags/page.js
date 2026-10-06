@@ -9,7 +9,7 @@ import PageContainer from '../../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../../lib/api';
 import { formatDate, healthBand } from '../../../lib/events';
 
-export const metadata = { title: 'Flags · Admin · TripNest' };
+export const metadata = { title: 'Flags · Admin · MFU-Events' };
 
 const FILTERS = [
   { value: 'open', label: 'Open' },

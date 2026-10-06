@@ -14,7 +14,7 @@ export default function RootError({ error, reset }) {
         <div className="card card--padded">
           <EmptyState
             icon="search"
-            title="Could not load TripNest"
+            title="Could not load MFU-Events"
             message={error?.message ?? 'The events service did not respond.'}
             action={
               <Button variant="primary" onClick={reset}>

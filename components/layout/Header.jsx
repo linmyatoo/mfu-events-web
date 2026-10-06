@@ -47,7 +47,7 @@ export default function Header({
         <span className="app-header__logo">
           <Icon name="calendar" size={20} />
         </span>
-        <span>TripNest</span>
+        <span>MFU-Events</span>
       </Link>
 
       {portal === 'user' ? (

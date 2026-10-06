@@ -7,7 +7,7 @@ import PageContainer from '../../../../components/layout/PageContainer';
 import { ApiError, apiGet } from '../../../../lib/api';
 import { ORGANIZER_TYPE_LABELS } from '../../../../lib/events';
 
-export const metadata = { title: 'Organizer · Admin · TripNest' };
+export const metadata = { title: 'Organizer · Admin · MFU-Events' };
 
 /** GET /api/admin/organizers/:id — the entity plus its members, each with `user`. */
 export default async function AdminOrganizerPage({ params }) {

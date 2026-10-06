@@ -7,7 +7,7 @@ import VenueForm from '../../../components/admin/VenueForm';
 import PageContainer from '../../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../../lib/api';
 
-export const metadata = { title: 'Venues · Admin · TripNest' };
+export const metadata = { title: 'Venues · Admin · MFU-Events' };
 
 /** GET /api/admin/venues — university rooms. Only admins create or edit these. */
 export default async function AdminVenuesPage() {

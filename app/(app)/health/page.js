@@ -3,7 +3,7 @@ import PageContainer from '../../../components/layout/PageContainer';
 import { apiGet } from '../../../lib/api';
 import { formatDate, healthBand } from '../../../lib/events';
 
-export const metadata = { title: 'Account Health · TripNest' };
+export const metadata = { title: 'Account Health · MFU-Events' };
 
 /**
  * GET /api/user/me/health — `{ score, bookingRestricted, openFlag, history }`.

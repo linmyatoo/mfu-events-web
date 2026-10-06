@@ -7,7 +7,7 @@ import { ApiError, apiGet } from '../../../../../lib/api';
 import { EVENT_STATUS } from '../../../../../lib/events';
 import { updateEventAction } from '../../../actions';
 
-export const metadata = { title: 'Edit event · TripNest' };
+export const metadata = { title: 'Edit event · MFU-Events' };
 
 /**
  * PATCH /api/organizer/events/:id.

@@ -8,7 +8,7 @@ import { EVENT_MANAGING_ROLES } from '../../../../lib/events';
 import { requireOrganizer } from '../../../../lib/session';
 import { createEventAction } from '../../actions';
 
-export const metadata = { title: 'New event · TripNest' };
+export const metadata = { title: 'New event · MFU-Events' };
 
 /** POST /api/organizer/organizers/:orgId/events — always creates a DRAFT. */
 export default async function NewEventPage() {

@@ -14,7 +14,7 @@ import {
 } from '../../lib/events';
 import { requireOrganizer } from '../../lib/session';
 
-export const metadata = { title: 'My Events · TripNest' };
+export const metadata = { title: 'My Events · MFU-Events' };
 
 /**
  * Events for every Organizer entity this account manages.

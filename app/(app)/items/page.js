@@ -2,7 +2,7 @@ import EmptyState from '../../../components/common/EmptyState';
 import PageContainer from '../../../components/layout/PageContainer';
 import { apiGet } from '../../../lib/api';
 
-export const metadata = { title: 'Equipment · TripNest' };
+export const metadata = { title: 'Equipment · MFU-Events' };
 
 /**
  * GET /api/user/items — the active equipment catalogue.

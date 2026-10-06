@@ -3,7 +3,7 @@ import PageContainer from '../../../components/layout/PageContainer';
 import { apiGet } from '../../../lib/api';
 import { formatEventWhen } from '../../../lib/events';
 
-export const metadata = { title: 'Venues · TripNest' };
+export const metadata = { title: 'Venues · MFU-Events' };
 
 /**
  * GET /api/organizer/venues?start_time&end_time.

@@ -28,6 +28,7 @@ export const adminNavItems = [
   { href: '/admin/organizers', label: 'Organizers', icon: 'home' },
   { href: '/admin/venues', label: 'Venues', icon: 'place' },
   { href: '/admin/items', label: 'Items', icon: 'sparkle' },
+  { href: '/admin/points', label: 'Points', icon: 'star' },
   { href: '/admin/flags', label: 'Flags', icon: 'heart' },
   { href: '/admin/logs', label: 'Activity', icon: 'search' },
 ];

@@ -5,7 +5,7 @@ import { ApiError, apiGet } from '../../../lib/api';
 import { requireUser } from '../../../lib/session';
 import { healthBand, initialsOf } from '../../../lib/events';
 
-export const metadata = { title: 'Profile · TripNest' };
+export const metadata = { title: 'Profile · MFU-Events' };
 
 const TILES = [
   { href: '/bookings', label: 'My bookings', icon: 'ticket' },

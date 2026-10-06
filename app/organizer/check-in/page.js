@@ -12,7 +12,7 @@ import {
 } from '../../../lib/events';
 import { requireOrganizer } from '../../../lib/session';
 
-export const metadata = { title: 'Check-in · TripNest' };
+export const metadata = { title: 'Check-in · MFU-Events' };
 
 /**
  * Door check-in.

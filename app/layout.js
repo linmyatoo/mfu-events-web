@@ -5,7 +5,7 @@ import '../styles/components.css';
 import '../styles/responsive.css';
 
 export const metadata = {
-  title: 'TripNest',
+  title: 'MFU-Events',
   description: 'Discover, book and attend university events.',
 };
 

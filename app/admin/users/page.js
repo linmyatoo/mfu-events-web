@@ -7,7 +7,7 @@ import PageContainer from '../../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../../lib/api';
 import { healthBand, initialsOf } from '../../../lib/events';
 
-export const metadata = { title: 'Users · Admin · TripNest' };
+export const metadata = { title: 'Users · Admin · MFU-Events' };
 
 const FILTERS = [
   { value: '', label: 'All' },

@@ -7,7 +7,7 @@ import PageContainer from '../../../../components/layout/PageContainer';
 import { ApiError, apiGet } from '../../../../lib/api';
 import { healthBand, initialsOf } from '../../../../lib/events';
 
-export const metadata = { title: 'User · Admin · TripNest' };
+export const metadata = { title: 'User · Admin · MFU-Events' };
 
 function Row({ label, value }) {
   return (

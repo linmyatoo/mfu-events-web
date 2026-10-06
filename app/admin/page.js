@@ -2,13 +2,14 @@ import Link from 'next/link';
 
 import EmptyState from '../../components/common/EmptyState';
 import Icon from '../../components/common/Icon';
+import Button from '../../components/common/Button';
 import FilterTabs from '../../components/admin/FilterTabs';
 import PermissionNotice from '../../components/admin/PermissionNotice';
 import PageContainer from '../../components/layout/PageContainer';
 import { apiGetAllowed } from '../../lib/api';
 import { eventStatusMeta, formatEventWhen, venueName } from '../../lib/events';
 
-export const metadata = { title: 'Events · Admin · TripNest' };
+export const metadata = { title: 'Events · Admin · MFU-Events' };
 
 /**
  * GET /api/admin/events — every event in every state, newest first.
@@ -37,6 +38,7 @@ export default async function AdminEventsPage({ searchParams }) {
     <PageContainer
       title="Events"
       subtitle="Every event across the university, in every lifecycle state."
+      actions={<Button href="/admin/events/new">+ New point event</Button>}
     >
       <FilterTabs options={FILTERS} active={status} basePath="/admin" />
 

@@ -30,7 +30,7 @@ async function loadEvent(id) {
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const event = await loadEvent(id);
-  return { title: event ? `${event.title} · TripNest` : 'Event · TripNest' };
+  return { title: event ? `${event.title} · MFU-Events` : 'Event · MFU-Events' };
 }
 
 export default async function EventDetailPage({ params }) {
