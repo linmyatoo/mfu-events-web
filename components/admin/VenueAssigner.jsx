@@ -43,7 +43,7 @@ export default function VenueAssigner({ event, venues }) {
       </p>
 
       {result?.error ? (
-        <div className="notice notice--info" role="status">
+        <div className="notice notice--danger" role="status">
           <p>{result.error}</p>
           {conflicts.length > 0 ? (
             <ul>

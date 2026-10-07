@@ -71,7 +71,7 @@ export default function BookingsList({ bookings }) {
       </div>
 
       {error ? (
-        <p className="notice notice--info" role="status">
+        <p className="notice notice--danger" role="status">
           {error}
         </p>
       ) : null}

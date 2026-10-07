@@ -1,16 +1,44 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Icon from './Icon';
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 /** Centred dialog. Escape and the backdrop both close it. */
 export default function Modal({ open, title, onClose, children, footer }) {
+  const panelRef = useRef(null);
+  const triggerRef = useRef(null);
+
   useEffect(() => {
     if (!open) return undefined;
 
+    triggerRef.current = document.activeElement;
+    panelRef.current?.focus();
+
     function onKeyDown(event) {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const focusable = panelRef.current?.querySelectorAll(FOCUSABLE_SELECTOR);
+      if (!focusable || focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
 
     document.addEventListener('keydown', onKeyDown);
@@ -19,6 +47,7 @@ export default function Modal({ open, title, onClose, children, footer }) {
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = '';
+      triggerRef.current?.focus?.();
     };
   }, [open, onClose]);
 
@@ -32,7 +61,14 @@ export default function Modal({ open, title, onClose, children, footer }) {
         onClick={onClose}
         aria-label="Close dialog"
       />
-      <div className="modal__panel" role="dialog" aria-modal="true" aria-label={title}>
+      <div
+        className="modal__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        ref={panelRef}
+        tabIndex={-1}
+      >
         <div className="modal__head">
           <h2 className="modal__title">{title}</h2>
           <button

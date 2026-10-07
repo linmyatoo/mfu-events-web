@@ -40,7 +40,7 @@ export default function AttendeeList({ eventId, attendees }) {
       </h2>
 
       {error ? (
-        <p className="notice notice--info" role="status">
+        <p className="notice notice--danger" role="status">
           {error}
         </p>
       ) : null}

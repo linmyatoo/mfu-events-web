@@ -379,6 +379,7 @@
 /* Upcoming / Completed style toggle — the _pill in MyBookingPage. */
 .pill-toggle {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: var(--space-4);
 }
@@ -776,6 +777,11 @@
 .notice--info {
   background-color: var(--primary-tint);
   color: var(--primary-color);
+}
+
+.notice--danger {
+  background-color: var(--danger-surface);
+  color: var(--danger-text);
 }
 
 /* ── Organizers ─────────────────────────────────────────────────────── */

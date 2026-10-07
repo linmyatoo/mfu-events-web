@@ -31,7 +31,7 @@ export default function UserActions({ user }) {
   return (
     <>
       {error ? (
-        <p className="notice notice--info" role="status">
+        <p className="notice notice--danger" role="status">
           {error}
         </p>
       ) : null}

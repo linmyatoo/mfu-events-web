@@ -10,7 +10,12 @@ export default function Disclosure({ label, children }) {
 
   return (
     <>
-      <Button variant="outline" size="sm" onClick={() => setOpen((value) => !value)}>
+      <Button
+        variant="outline"
+        size="sm"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
         {open ? 'Close' : label}
       </Button>
       {open ? children : null}
