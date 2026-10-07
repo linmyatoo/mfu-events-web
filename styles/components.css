@@ -206,7 +206,7 @@
   gap: var(--space-3);
   width: 100%;
   padding: var(--space-3);
-  border: none;
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
   background-color: var(--surface-color);
   text-align: left;
@@ -236,6 +236,7 @@
 /* 16px, w700, single line with an ellipsis — as in the widget. */
 .event-card__title {
   margin: 0;
+  font-family: var(--font-family-display);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
   white-space: nowrap;
@@ -619,6 +620,7 @@
 }
 
 .empty-state__title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--text-color);
@@ -945,6 +947,7 @@
 }
 
 .modal__title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   margin: 0;

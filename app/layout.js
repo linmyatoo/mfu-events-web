@@ -5,6 +5,7 @@ import '../styles/components.css';
 import '../styles/responsive.css';
 
 import BrandBadge from '../components/layout/BrandBadge';
+import { inter, spaceGrotesk } from '../lib/fonts';
 
 export const metadata = {
   title: 'MFU-Events',
@@ -18,7 +19,7 @@ export const metadata = {
  */
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
       <body>
         {children}
         <BrandBadge />

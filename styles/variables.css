@@ -57,11 +57,12 @@
   --danger-text: #dc2626;
   --star-color: #ffb300;
 
-  /* Radius — matches the BorderRadius values used across the mobile widgets */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  /* Radius — Bold Campus Energy: rounder, friendlier than the mobile-app
+     source values. */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
   --radius-pill: 999px;
   --border-radius: var(--radius-md);
 
@@ -75,9 +76,12 @@
   --space-8: 32px;
   --space-10: 40px;
 
-  /* Typography */
-  --font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui,
-    -apple-system, sans-serif;
+  /* Typography — Bold Campus Energy: Inter body, Space Grotesk display. */
+  --font-family: var(--font-inter), "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, system-ui, -apple-system, sans-serif;
+  --font-family-display: var(--font-space-grotesk), var(--font-family);
+  /* Card border is transparent — card separation is shadow-driven. */
+  --card-border: transparent;
   /* Sizes are the Flutter TextStyle values: body 14, card title 16,
      section heading 18, page heading 22. */
   --font-size-xs: 0.6875rem; /* 11 — date block month, badges */
@@ -98,8 +102,8 @@
      all on EventCard, booking tiles or settings tiles. Only lifted surfaces
      (dialogs, drawer) and the gradient pills carry a shadow. */
   --shadow-card: none;
-  --shadow-hover: 0 4px 12px rgba(18, 18, 18, 0.08);
-  --shadow-raised: 0 12px 24px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 10px 24px rgba(37, 99, 235, 0.22);
+  --shadow-raised: 0 18px 36px rgba(37, 99, 235, 0.22);
   --shadow-primary: 0 2px 6px rgba(59, 130, 246, 0.3);
 
   /* Layout metrics */
