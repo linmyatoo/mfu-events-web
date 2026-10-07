@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -45,7 +46,7 @@ export default function Header({
 
       <Link href="/" className="app-header__brand">
         <span className="app-header__logo">
-          <Icon name="calendar" size={20} />
+          <Image src="/mfu-logo.png" alt="" width={44} height={44} />
         </span>
         <span>MFU-Events</span>
       </Link>

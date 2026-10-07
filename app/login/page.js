@@ -1,7 +1,7 @@
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
 import LoginForm from '../../components/auth/LoginForm';
-import Icon from '../../components/common/Icon';
 import { getSession } from '../../lib/session';
 
 export const metadata = { title: 'Sign in · MFU-Events' };
@@ -19,7 +19,7 @@ export default async function LoginPage() {
         <div className="page-header">
           <span className="app-header__brand">
             <span className="app-header__logo">
-              <Icon name="calendar" size={20} />
+              <Image src="/mfu-logo.png" alt="" width={44} height={44} />
             </span>
             <span>MFU-Events</span>
           </span>

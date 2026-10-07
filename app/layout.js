@@ -4,6 +4,8 @@ import '../styles/layout.css';
 import '../styles/components.css';
 import '../styles/responsive.css';
 
+import BrandBadge from '../components/layout/BrandBadge';
+
 export const metadata = {
   title: 'MFU-Events',
   description: 'Discover, book and attend university events.',
@@ -17,7 +19,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <BrandBadge />
+      </body>
     </html>
   );
 }

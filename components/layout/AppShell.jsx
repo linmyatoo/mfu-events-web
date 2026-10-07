@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import Icon from '../common/Icon';
@@ -78,7 +79,7 @@ export default function AppShell({
         <div className="drawer__head">
           <span className="app-header__brand">
             <span className="app-header__logo">
-              <Icon name="calendar" size={20} />
+              <Image src="/mfu-logo.png" alt="" width={44} height={44} />
             </span>
             <span>MFU-Events</span>
           </span>
