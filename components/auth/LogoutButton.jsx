@@ -14,7 +14,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button variant="outline" block type="submit" disabled={pending}>
+    <Button variant="outline" type="submit" disabled={pending}>
       {pending ? 'Signing out…' : 'Sign out'}
     </Button>
   );

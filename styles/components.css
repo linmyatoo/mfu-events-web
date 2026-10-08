@@ -834,6 +834,94 @@
   font-size: var(--font-size-sm);
 }
 
+/* ── Profile page ───────────────────────────────────────────────────── */
+
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.profile-hero__avatar {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  font-size: var(--font-size-md);
+}
+
+.profile-hero__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-hero__name {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+}
+
+.profile-hero__email {
+  font-size: var(--font-size-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-hero__badge {
+  flex: 0 0 auto;
+  margin-left: auto;
+  text-transform: capitalize;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.profile-stat {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+}
+
+.profile-stat__label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-text-color);
+}
+
+.profile-stat__value {
+  display: block;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+}
+
+.profile-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.profile-signout {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 560px) {
+  .profile-stats,
+  .profile-tiles {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Q&A ────────────────────────────────────────────────────────────── */
 
 .qa-item__question {

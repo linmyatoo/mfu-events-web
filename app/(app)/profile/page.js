@@ -12,11 +12,11 @@ const TILES = [
   { href: '/health', label: 'Account health', icon: 'heart' },
 ];
 
-function Row({ label, value }) {
+function Stat({ label, value }) {
   return (
-    <div className="booking-panel__row">
-      <span className="text-muted">{label}</span>
-      <span>{value ?? '—'}</span>
+    <div className="profile-stat">
+      <span className="profile-stat__label">{label}</span>
+      <span className="profile-stat__value">{value ?? '—'}</span>
     </div>
   );
 }
@@ -34,28 +34,29 @@ export default async function ProfilePage() {
   return (
     <PageContainer title="Profile">
       <section className="page-section">
-        {/* `.stack`, not `.booking-panel` — the latter is the sticky detail rail. */}
-        <div className="card card--padded stack">
-          <div className="organizer">
-            <span className="organizer__avatar" aria-hidden="true">
-              {initialsOf(user.name)}
-            </span>
-            <span>
-              <span className="organizer__name">{user.name}</span>
-              <span className="organizer__role text-muted">{user.email}</span>
-            </span>
-          </div>
+        <div className="card card--padded profile-hero">
+          <span className="organizer__avatar profile-hero__avatar" aria-hidden="true">
+            {initialsOf(user.name)}
+          </span>
+          <span className="profile-hero__info">
+            <span className="profile-hero__name">{user.name}</span>
+            <span className="profile-hero__email text-muted">{user.email}</span>
+          </span>
+          <span className="badge badge--info profile-hero__badge">{user.role}</span>
+        </div>
+      </section>
 
-          <Row label="University ID" value={user.university_id} />
-          <Row label="Role" value={user.role} />
-          <Row label="School" value={user.school} />
-          <Row label="Year" value={user.year} />
-          <Row
+      <section className="page-section">
+        <div className="profile-stats">
+          <Stat label="University ID" value={user.university_id} />
+          <Stat
             label="Account status"
             value={<span className="badge badge--neutral">{user.status}</span>}
           />
+          <Stat label="School" value={user.school} />
+          <Stat label="Year" value={user.year} />
           {band ? (
-            <Row
+            <Stat
               label="Health score"
               value={
                 <span className={`badge badge--${band.variant}`}>
@@ -69,24 +70,19 @@ export default async function ProfilePage() {
 
       <section className="page-section">
         <h2 className="section-title">Shortcuts</h2>
-        <div className="stack">
+        <div className="profile-tiles">
           {TILES.map((tile) => (
             <a className="settings-tile" href={tile.href} key={tile.href}>
               <span className="settings-tile__icon">
                 <Icon name={tile.icon} size={18} />
               </span>
               <span>{tile.label}</span>
-              <Icon
-                name="chevronRight"
-                size={18}
-                className="settings-tile__chevron"
-              />
             </a>
           ))}
         </div>
       </section>
 
-      <section className="page-section">
+      <section className="page-section profile-signout">
         <LogoutButton />
       </section>
     </PageContainer>

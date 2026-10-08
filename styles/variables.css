@@ -5,14 +5,15 @@
  */
 
 :root {
-  /* Brand */
-  --primary-color: #2563eb;
-  --primary-light: #3b82f6;
-  --primary-deep: #1e40af;
-  --primary-sky: #60a5fa;
-  --primary-dark: #1d4ed8;
-  --primary-navy: #1e3a8a;
-  --primary-tint: rgba(37, 99, 235, 0.12);
+  /* Brand — locked to two blues, no third hue. --primary-tint is the same
+     --primary-color at low opacity, not a separate color. */
+  --primary-color: #1a3fc4;
+  --primary-light: #1a3fc4;
+  --primary-deep: #0f2a8c;
+  --primary-sky: #1a3fc4;
+  --primary-dark: #0f2a8c;
+  --primary-navy: #0f2a8c;
+  --primary-tint: rgba(26, 63, 196, 0.12);
 
   /* Brand gradients used by the logo, posters and points pills */
   --gradient-brand: linear-gradient(
@@ -102,9 +103,9 @@
      all on EventCard, booking tiles or settings tiles. Only lifted surfaces
      (dialogs, drawer) and the gradient pills carry a shadow. */
   --shadow-card: none;
-  --shadow-hover: 0 10px 24px rgba(37, 99, 235, 0.22);
-  --shadow-raised: 0 18px 36px rgba(37, 99, 235, 0.22);
-  --shadow-primary: 0 2px 6px rgba(59, 130, 246, 0.3);
+  --shadow-hover: 0 10px 24px rgba(26, 63, 196, 0.22);
+  --shadow-raised: 0 18px 36px rgba(26, 63, 196, 0.22);
+  --shadow-primary: 0 2px 6px rgba(26, 63, 196, 0.3);
 
   /* Layout metrics */
   --header-height: 64px;
@@ -122,6 +123,13 @@
    (persisted to localStorage, read before paint by the inline script in
    app/layout.js to avoid a flash of the wrong theme). */
 :root[data-theme='dark'] {
+  /* #1A3FC4 drops to ~2:1 contrast on these dark surfaces (fails WCAG even
+     for UI components). Same hue, lifted to #5B7FFF so text/icons/links
+     stay readable; surfaces still use the flat #1A3FC4/#0F2A8C pair. */
+  --primary-color: #5b7fff;
+  --primary-light: #5b7fff;
+  --primary-tint: rgba(91, 127, 255, 0.16);
+
   --surface-color: #1a2233;
   --surface-muted: #202a3d;
   --surface-subtle: #232d41;
