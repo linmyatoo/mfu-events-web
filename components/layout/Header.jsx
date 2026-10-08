@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { initialsOf } from '../../lib/events';
 import Icon from '../common/Icon';
 import SearchBar from '../forms/SearchBar';
+import ThemeToggle from './ThemeToggle';
 
 /**
  * Top bar: brand, event search, points balance and the signed-in student.
@@ -90,6 +91,8 @@ export default function Header({
             <span>{pointsBalance} pts</span>
           </Link>
         ) : null}
+
+        <ThemeToggle />
 
         <Link href="/profile" className="app-header__user">
           <span className="app-header__avatar" aria-hidden="true">

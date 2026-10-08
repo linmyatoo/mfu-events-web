@@ -1,20 +1,14 @@
 import Link from 'next/link';
 
-import {
-  bookingStatusMeta,
-  formatEventWhen,
-  initialsOf,
-  venueName,
-} from '../../lib/events';
+import { bookingStatusMeta, formatEventWhen, venueName } from '../../lib/events';
 import Icon from '../common/Icon';
-import EventPoster from './EventPoster';
 
 /**
  * Event row for the vertical feed list.
  *
  * Layout follows the Flutter `EventCard` widget: flat white card, radius 16,
- * 12px padding, a 92×72 thumbnail on the left, then title / meta line /
- * footer row with the gradient pill pushed to the right.
+ * 12px padding, title / meta line / footer row with the gradient pill
+ * pushed to the right.
  */
 export default function EventCard({ event }) {
   const booking = event.myBooking;
@@ -22,11 +16,6 @@ export default function EventCard({ event }) {
 
   return (
     <Link href={`/events/${event.id}`} className="event-card">
-      <EventPoster
-        src={event.poster_image_url}
-        initials={initialsOf(event.title)}
-      />
-
       <div className="event-card__body">
         <div className="event-card__heading">
           <h3 className="event-card__title">{event.title}</h3>

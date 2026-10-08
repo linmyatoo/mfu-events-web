@@ -116,3 +116,29 @@
   --transition-fast: 150ms ease;
   --transition-base: 220ms ease;
 }
+
+/* Dark theme — same tokens, re-pointed to a dark palette. Applied via
+   `data-theme="dark"` on <html>, set by components/layout/ThemeToggle.jsx
+   (persisted to localStorage, read before paint by the inline script in
+   app/layout.js to avoid a flash of the wrong theme). */
+:root[data-theme='dark'] {
+  --surface-color: #1a2233;
+  --surface-muted: #202a3d;
+  --surface-subtle: #232d41;
+  --background-color: #10151f;
+
+  --text-color: #edeff2;
+  --text-secondary: #a7afbd;
+  --muted-text-color: #717a8a;
+  --text-on-primary: #ffffff;
+
+  --border-color: #2a3347;
+  --input-border-color: #3a4459;
+
+  --success-surface: rgba(34, 197, 94, 0.16);
+  --success-text: #4ade80;
+  --warning-surface: rgba(245, 158, 11, 0.16);
+  --warning-text: #fbbf24;
+  --danger-surface: rgba(239, 68, 68, 0.16);
+  --danger-text: #f87171;
+}
