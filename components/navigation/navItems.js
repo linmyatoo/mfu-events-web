@@ -23,7 +23,7 @@ export const organizerNavItems = [
   { href: '/organizer', label: 'My Events', icon: 'calendar' },
   { href: '/organizer/check-in', label: 'Check-in', icon: 'ticket' },
   { href: '/organizer/venues', label: 'Venues', icon: 'place' },
-  { href: '/staff-calls', label: 'Staff Calls', icon: 'user' },
+  { href: '/organizer/staff-calls', label: 'Staff Calls', icon: 'user' },
   { href: '/organizer/organizations', label: 'My Organizations', icon: 'home' },
 ];
 
