@@ -425,3 +425,32 @@ export async function applyStaffCallAction(_prevState, formData) {
   revalidatePath(`/staff-calls/${callId}`);
   return { ok: true, message: 'Application submitted. The organizer will review it.' };
 }
+
+// --- Organizations --------------------------------------------------------
+
+/**
+ * POST /api/user/organizations/:id/apply — self-serve join request
+ * (`orgApplicationService.apply`, `MFU-Events/backend` commit `1d4a639`).
+ * `message` is optional free text; omit the key entirely when blank rather
+ * than sending `''` (the backend already normalizes `message || null`, but
+ * there's no reason to send an empty string over omitting it). Stays on the
+ * discover page on success — there's no per-application detail route to
+ * redirect to (see Phase 22 notes in plan.md).
+ */
+export async function applyToOrgAction(_prevState, formData) {
+  const orgId = String(formData.get('orgId') ?? '');
+  const message = String(formData.get('message') ?? '').trim();
+
+  if (!orgId) return { error: 'Missing organization.' };
+
+  try {
+    await apiPost(`/api/user/organizations/${orgId}/apply`, {
+      ...(message ? { message } : {}),
+    });
+  } catch (error) {
+    return failure(error);
+  }
+
+  revalidatePath('/organizations');
+  return { ok: true, message: 'Application submitted.' };
+}

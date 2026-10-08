@@ -1,6 +1,10 @@
 # Phase 20 — Real `review_edit_window_days` via `GET /api/user/settings`
 
-**Status: Not started.**
+**Status: Done (2026-10-09).** `ReviewsSection` now takes a
+`reviewEditWindowDays` prop (default `7`); both call sites
+(`app/(app)/events/[id]/page.js`, `app/organizer/events/[id]/page.js`) fetch
+`GET /api/user/settings` and pass `review_edit_window_days` through. Hardcoded
+constant and stale doc comment removed. Lint and build pass.
 
 **Spec section:** N/A in the original migration doc — this consumes a
 **post-Phase-19 backend follow-up**, commit `029684f` ("fix: address three

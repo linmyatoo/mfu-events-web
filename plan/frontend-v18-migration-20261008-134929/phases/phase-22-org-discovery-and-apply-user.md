@@ -1,6 +1,22 @@
 # Phase 22 — Organization discovery & self-serve join requests (user app)
 
-**Status: Not started.**
+**Status: Done (2026-10-09).** Implemented exactly as specced:
+`applyToOrgAction` added to `app/actions.js`; new
+`components/events/OrgApplyForm.jsx` (client, `useActionState`, hidden
+`orgId` input, optional message textarea); new
+`app/(app)/organizations/page.js` (server component, `searchParams.view`
+discover/mine tabs, fetches both `GET /api/user/organizations` and `GET
+/api/user/organizations/my-applications` unconditionally, cross-references
+them so an org with an existing pending/approved application shows a
+status badge instead of the apply form — a rejected application still
+shows the form again); `/organizations` added to `userNavItems`. Reused the
+already-added `ORG_APPLICATION_STATUS`/`orgApplicationStatusMeta` in
+`lib/events.js` (no changes needed there). Wrote the tab switcher inline on
+the page per the phase's own recommended default (option a), not via
+`FilterTabs.jsx`. `npm run lint` and `npm run build` pass; manual
+sign-in/smoke testing against a running dev backend was not performed in
+this session (no backend process was started) — same deferral noted on
+every other phase in this plan.
 
 **Spec section:** N/A in the original migration doc — entirely new backend
 surface, `MFU-Events` commit `1d4a639` ("feat(org): add self-serve

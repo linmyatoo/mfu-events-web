@@ -1,6 +1,23 @@
 # Phase 23 — Org manager applications queue & `application_open` toggle (organizer app)
 
-**Status: Not started.**
+**Status: Done (2026-10-09).** Implemented exactly as specced:
+`toggleOrgApplicationsAction`/`approveOrgApplicationAction` (positional-arg,
+`useTransition`-bound) and `rejectOrgApplicationAction`
+(`useActionState`-bound, optional feedback) added to
+`app/organizer/actions.js`; new `app/organizer/organizations/page.js`
+(`GET /api/org/my-orgs`, empty state for non-managers); new
+`app/organizer/organizations/[id]/page.js` (`Promise.all` of org detail +
+applications, `try/catch → notFound()` on 403/404, inline `?status=` filter
+links); new `components/organizer/OrgApplicationsManager.jsx` (toggle
+button mirroring `OrganizerMembers.jsx`'s Activate/Deactivate, per-pending-
+application Approve button + inline reject mini-form, structured after
+`StaffCallsManager.jsx`'s accept/reject block); `/organizer/organizations`
+added to `organizerNavItems` unconditionally. `lib/events.js`'s
+`orgApplicationStatusMeta` was already added ahead of this phase (by Phase
+22's session), so no changes were needed there. `npm run lint` and
+`npm run build` pass; manual sign-in/smoke testing against a running dev
+backend was not performed in this session (no backend process was
+started) — same deferral noted on every other phase in this plan.
 
 **Spec section:** N/A in the original migration doc — the org_manager side
 of the same net-new backend surface as Phase 22, `MFU-Events` commit

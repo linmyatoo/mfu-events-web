@@ -1,22 +1,30 @@
 # Frontend v18 Migration — Master Plan
 
-## ALL 19 ORIGINAL PHASES COMPLETE (2026-10-08); PHASES 20-23 PLANNED (2026-10-08)
+## ALL 23 PHASES COMPLETE (2026-10-09)
 
-The frontend v18 migration plan's original 19 phases are fully executed —
-every breaking change (Part A, phases 1-10) and every net-new feature
-surface (Part B, phases 11-19) listed in the acceptance criteria has a
-shipped implementation, and `npm run lint`/`npm run build` pass as of the
-Phase 19 commit. See each `phases/phase-*.md` file's own "Status" block for
-implementation notes, drift found against the real backend source, and
-per-phase deviations.
+The frontend v18 migration plan's original 19 phases, plus follow-up Phases
+20-23, are fully executed — every breaking change (Part A, phases 1-10),
+every net-new feature surface (Part B, phases 11-19), and every
+post-Phase-19 backend follow-up (Part C, phases 20-23) listed in the
+acceptance criteria has a shipped implementation, and `npm run
+lint`/`npm run build` pass as of the Phase 23 commit. See each
+`phases/phase-*.md` file's own "Status" block for implementation notes,
+drift found against the real backend source, and per-phase deviations.
 
-**New backend work landed after Phase 19 closed** (four `MFU-Events`
+**Phases 20-23 consumed the post-Phase-19 backend work** (four `MFU-Events`
 commits: `029684f`, `1d4a639`, plus doc/test-only commits `48ffc32`,
-`f0f7f40`, `fd9f343`, `16435a8`), unblocking three of the follow-ups below
-and adding one entirely new feature surface. **Phases 20-23 are planned
-(not yet implemented)** to consume this work — see "Phase plan" below and
-`research/requirements.md`'s 2026-10-08 addendum for the full verified
-contract of every new/changed route.
+`f0f7f40`, `fd9f343`, `16435a8`) — see `research/requirements.md`'s
+2026-10-08 addendum for the full verified contract of every new/changed
+route, and the individual phase files for implementation detail:
+- Phase 20 — real `review_edit_window_days` via `GET /api/user/settings`.
+- Phase 21 — organizer chip restored on the admin venue schedule page.
+- Phase 22 — organization discovery & self-serve join requests (user app).
+- Phase 23 — org_manager applications queue & `application_open` toggle.
+
+**Not yet done:** manual smoke testing against a live backend (every phase,
+including 20-23, has deferred this — see each phase's "Verification"
+section for the manual steps still outstanding) and a commit of the
+Phase 20-23 changes.
 
 **Outstanding follow-ups collected from phase status blocks** (updated
 2026-10-08 — three of the original six are now unblocked by new backend

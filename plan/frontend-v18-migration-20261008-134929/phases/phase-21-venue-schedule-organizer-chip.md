@@ -1,6 +1,9 @@
 # Phase 21 — Restore the organizer chip on the admin venue schedule
 
-**Status: Not started.**
+**Status: Done (2026-10-09).** Footer chip added to
+`app/admin/venues/schedule/page.js`'s event card (`event.main_organizer?.name
+?? 'No organizer'`, plus `event.org.name` when present); doc comment
+updated. Lint and build pass.
 
 **Spec section:** N/A in the original migration doc — consumes the same
 post-Phase-19 backend follow-up commit, `029684f`, specifically its

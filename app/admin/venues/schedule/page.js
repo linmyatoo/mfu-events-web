@@ -13,6 +13,8 @@ export const metadata = { title: 'Venue schedule · Admin · MFU-Events' };
  * GET /api/admin/venues/schedule — every venue with the events currently
  * holding it. "Holding" means a status in `BLOCKING_STATUSES`: approved,
  * venue_assigned, published, registration_open or registration_closed.
+ * Each event is embedded with `org: {id, name} | null` and
+ * `main_organizer: {id, name} | null`.
  */
 export default async function VenueSchedulePage() {
   const schedule = await apiGetAllowed('/api/admin/venues/schedule');
@@ -59,6 +61,15 @@ export default async function VenueSchedulePage() {
                         </p>
                       </div>
                     </Link>
+                    <div className="event-card__footer">
+                      <span className="chip">{event.main_organizer?.name ?? 'No organizer'}</span>
+                      {event.org ? (
+                        <span className="event-card__meta">
+                          <Icon name="home" size={16} />
+                          {event.org.name}
+                        </span>
+                      ) : null}
+                    </div>
                   </li>
                 );
               })}

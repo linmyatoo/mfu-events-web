@@ -10,27 +10,6 @@ import StarRating from '../common/StarRating';
 
 const initialState = { error: null, message: null };
 
-/**
- * Edit/delete window for a review, in days since `created_at`. Mirrors the
- * backend's `settings.review_edit_window_days` (default 7 — see
- * reviewService.editReview in MFU-Events/backend). There is no user-facing
- * way to read the real setting: `GET /api/admin/settings` is admin-only (role
- * `admin`, no other route exposes it — confirmed against
- * MFU-Events/backend/routes/{admin,user,organizer}.js), and this component
- * only ever renders inside the User and Organizer portals
- * (`app/(app)/events/[id]/page.js`, `app/organizer/events/[id]/page.js`) —
- * never the Admin one. Phase 19 (`app/admin/settings/page.js`) shipped the
- * admin-only settings editor, but that doesn't change this: there is still no
- * endpoint a non-admin session can call to read the real value, so this
- * keeps hardcoding the documented default, same as `healthBand()` hardcodes
- * `health_restriction_threshold` in lib/events.js. The backend re-checks the
- * real window on every PATCH/DELETE regardless of what this constant says.
- * Unblocking this needs a backend change (e.g. a non-admin-readable settings
- * subset, or embedding `review_edit_window_days` in the event/booking
- * payload) — out of scope for this frontend plan.
- */
-const REVIEW_EDIT_WINDOW_DAYS = 7;
-
 function daysSince(iso) {
   return (Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000);
 }
@@ -77,7 +56,18 @@ function SentimentTag({ review }) {
  * `canSeeContent` read-only view in `frontend/src/pages/creator/EventDetail.jsx:258-277`).
  * It skips the submit-form branch entirely and only renders the list.
  */
-export default function ReviewsSection({ event, user, readOnly = false }) {
+/**
+ * Edit/delete window for a review, in days since `created_at`, read from
+ * `GET /api/user/settings` (`review_edit_window_days`, default 7) and
+ * passed in via the `reviewEditWindowDays` prop by both call sites. Falls
+ * back to the backend's documented default of 7 if the prop is missing.
+ */
+export default function ReviewsSection({
+  event,
+  user,
+  readOnly = false,
+  reviewEditWindowDays = 7,
+}) {
   const [state, formAction, pending] = useActionState(submitReviewAction, initialState);
   const [rating, setRating] = useState(0);
 
@@ -145,7 +135,7 @@ export default function ReviewsSection({ event, user, readOnly = false }) {
         <ul className="stack">
           {reviews.map((review) => {
             const isOwn = !readOnly && review.user_id === user?.id;
-            const canEdit = isOwn && daysSince(review.created_at) <= REVIEW_EDIT_WINDOW_DAYS;
+            const canEdit = isOwn && daysSince(review.created_at) <= reviewEditWindowDays;
             const isEditing = editingId === review.id;
 
             return (

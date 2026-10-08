@@ -59,6 +59,7 @@ export default async function OrganizerEventPage({ params }) {
 
   const attendees = await apiGetAllowed(`/api/organizer/events/${id}/attendees`);
   const staffCalls = await apiGetAllowed(`/api/organizer/events/${id}/staff-calls`);
+  const settings = await apiGet('/api/user/settings');
 
   const status = eventStatusMeta(event.status);
   const questions = event.questions ?? [];
@@ -170,7 +171,12 @@ export default async function OrganizerEventPage({ params }) {
               here is equivalent; readOnly hides the submit form (organizers don't
               author attendee reviews). */}
           {canEdit && reviews.length > 0 ? (
-            <ReviewsSection event={event} user={null} readOnly />
+            <ReviewsSection
+              event={event}
+              user={null}
+              readOnly
+              reviewEditWindowDays={settings.review_edit_window_days}
+            />
           ) : null}
         </div>
 

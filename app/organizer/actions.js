@@ -397,3 +397,57 @@ export async function answerQuestionAction(_prevState, formData) {
   revalidatePath(`/events/${eventId}`);
   return { ok: true, message: 'Answer posted.' };
 }
+
+// --- Org manager applications queue --------------------------------------------
+
+/** Both org-applications routes revalidate the queue list and its detail page. */
+function refreshOrg(orgId) {
+  revalidatePath('/organizer/organizations');
+  if (orgId) revalidatePath(`/organizer/organizations/${orgId}`);
+}
+
+/**
+ * PATCH /api/org/:id — org_manager only. `application_open` is coerced with
+ * `=== true` server-side, so a real boolean must be sent, not a form-field
+ * string (see Phase 23 notes in plan.md).
+ */
+export async function toggleOrgApplicationsAction(orgId, open) {
+  try {
+    await apiPatch(`/api/org/${orgId}`, { application_open: Boolean(open) });
+  } catch (error) {
+    return failure(error);
+  }
+  refreshOrg(orgId);
+  return { ok: true };
+}
+
+/** POST /api/org/:id/applications/:appId/approve — org_manager only. */
+export async function approveOrgApplicationAction(orgId, appId) {
+  try {
+    await apiPost(`/api/org/${orgId}/applications/${appId}/approve`);
+  } catch (error) {
+    return failure(error);
+  }
+  refreshOrg(orgId);
+  return { ok: true };
+}
+
+/**
+ * POST /api/org/:id/applications/:appId/reject — org_manager only.
+ * `feedback` is optional free text.
+ */
+export async function rejectOrgApplicationAction(_prevState, formData) {
+  const orgId = String(formData.get('orgId') ?? '');
+  const appId = String(formData.get('appId') ?? '');
+  const feedback = String(formData.get('feedback') ?? '').trim();
+
+  try {
+    await apiPost(`/api/org/${orgId}/applications/${appId}/reject`, {
+      feedback: feedback || undefined,
+    });
+  } catch (error) {
+    return failure(error);
+  }
+  refreshOrg(orgId);
+  return { ok: true };
+}

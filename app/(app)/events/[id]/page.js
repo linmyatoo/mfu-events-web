@@ -35,7 +35,11 @@ export async function generateMetadata({ params }) {
 
 export default async function EventDetailPage({ params }) {
   const { id } = await params;
-  const [user, event] = await Promise.all([requireUser(), loadEvent(id)]);
+  const [user, event, settings] = await Promise.all([
+    requireUser(),
+    loadEvent(id),
+    apiGet('/api/user/settings'),
+  ]);
 
   if (!event) notFound();
 
@@ -130,7 +134,13 @@ export default async function EventDetailPage({ params }) {
           <QuestionsSection event={event} user={user} />
 
           {/* The API only returns reviews once the event has started. */}
-          {event.isPast ? <ReviewsSection event={event} user={user} /> : null}
+          {event.isPast ? (
+            <ReviewsSection
+              event={event}
+              user={user}
+              reviewEditWindowDays={settings.review_edit_window_days}
+            />
+          ) : null}
         </div>
 
         <BookingPanel event={event} user={user} />

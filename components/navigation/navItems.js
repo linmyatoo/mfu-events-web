@@ -11,6 +11,7 @@ export const userNavItems = [
   { href: '/bookings', label: 'My Bookings', icon: 'ticket' },
   { href: '/event-requests', label: 'Event Requests', icon: 'calendar' },
   { href: '/staff-calls', label: 'Staff Calls', icon: 'user' },
+  { href: '/organizations', label: 'Organizations', icon: 'place' },
   { href: '/points', label: 'Points', icon: 'sparkle' },
   { href: '/recognition', label: 'Recognition', icon: 'star' },
   { href: '/health', label: 'Health', icon: 'heart' },
@@ -23,6 +24,7 @@ export const organizerNavItems = [
   { href: '/organizer/check-in', label: 'Check-in', icon: 'ticket' },
   { href: '/organizer/venues', label: 'Venues', icon: 'place' },
   { href: '/staff-calls', label: 'Staff Calls', icon: 'user' },
+  { href: '/organizer/organizations', label: 'My Organizations', icon: 'home' },
 ];
 
 /** /api/admin — role `admin`, gated further per area by admin_permissions. */
