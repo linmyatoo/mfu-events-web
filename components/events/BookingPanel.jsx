@@ -5,10 +5,12 @@ import { useState, useTransition } from 'react';
 import { bookEventAction, cancelBookingAction } from '../../app/actions';
 import {
   BOOKING_STATUS,
+  CHECKIN_MODE,
   bookingBlockedReason,
   bookingStatusMeta,
   formatDate,
 } from '../../lib/events';
+import SelfCheckIn from '../bookings/SelfCheckIn';
 import Button from '../common/Button';
 import Icon from '../common/Icon';
 import Modal from '../common/Modal';
@@ -30,6 +32,7 @@ export default function BookingPanel({ event, user }) {
   const blockedReason = bookingBlockedReason(event, user);
   const active = booking && booking.status !== BOOKING_STATUS.CANCELLED;
   const canCancel = booking?.status === BOOKING_STATUS.BOOKED;
+  const isSelfScan = event.checkin_mode === CHECKIN_MODE.SELF_SCAN;
 
   function run(action) {
     setNotice(null);
@@ -85,11 +88,15 @@ export default function BookingPanel({ event, user }) {
         <span>{formatDate(event.registration_deadline)}</span>
       </div>
 
-      {active && booking.qr_token ? (
+      {active && booking.qr_token && !isSelfScan ? (
         <div className="qr-token">
           <p className="qr-token__label">Check-in token</p>
           <p className="qr-token__value">{booking.qr_token}</p>
         </div>
+      ) : null}
+
+      {isSelfScan && booking?.status === BOOKING_STATUS.BOOKED ? (
+        <SelfCheckIn />
       ) : null}
 
       {notice ? (

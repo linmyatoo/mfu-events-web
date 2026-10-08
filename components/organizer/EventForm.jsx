@@ -2,7 +2,12 @@
 
 import { useActionState, useState } from 'react';
 
-import { MEMBER_ROLE_LABELS, toLocalInput } from '../../lib/events';
+import {
+  CHECKIN_MODE,
+  CHECKIN_MODE_LABELS,
+  MEMBER_ROLE_LABELS,
+  toLocalInput,
+} from '../../lib/events';
 import Button from '../common/Button';
 
 const initialState = { error: null };
@@ -11,6 +16,11 @@ const AUDIENCE_OPTIONS = [
   { value: 'open', label: 'Open to everyone' },
   { value: 'school', label: 'One school only' },
   { value: 'year', label: 'One year group only' },
+];
+
+const CHECKIN_MODE_OPTIONS = [
+  { value: CHECKIN_MODE.STAFF_SCAN, label: CHECKIN_MODE_LABELS.staff_scan },
+  { value: CHECKIN_MODE.SELF_SCAN, label: CHECKIN_MODE_LABELS.self_scan },
 ];
 
 /**
@@ -37,19 +47,19 @@ export default function EventForm({
 
       {organizers.length > 0 ? (
         <div className="field">
-          <label className="field__label" htmlFor="organizerId">
+          <label className="field__label" htmlFor="org_id">
             Hosted by
           </label>
           <select
-            id="organizerId"
-            name="organizerId"
+            id="org_id"
+            name="org_id"
             className="select"
-            defaultValue={organizers[0]?.organizer_id}
+            defaultValue={organizers[0]?.org_id}
             required
           >
             {organizers.map((membership) => (
-              <option key={membership.id} value={membership.organizer_id}>
-                {membership.organizer?.name} (
+              <option key={membership.id} value={membership.org_id}>
+                {membership.org?.name} (
                 {MEMBER_ROLE_LABELS[membership.role] ?? membership.role})
               </option>
             ))}
@@ -264,6 +274,28 @@ export default function EventForm({
           </p>
         </div>
       ) : null}
+
+      <div className="field">
+        <label className="field__label" htmlFor="checkin_mode">
+          Check-in method
+        </label>
+        <select
+          id="checkin_mode"
+          name="checkin_mode"
+          className="select"
+          defaultValue={event?.checkin_mode ?? CHECKIN_MODE.STAFF_SCAN}
+        >
+          {CHECKIN_MODE_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <p className="field__hint">
+          Self-scan generates a venue QR attendees scan themselves instead of
+          showing their booking QR to staff.
+        </p>
+      </div>
 
       <div className="field">
         <label className="field__label" htmlFor="requirements">

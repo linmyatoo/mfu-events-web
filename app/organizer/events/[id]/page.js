@@ -4,8 +4,9 @@ import { notFound } from 'next/navigation';
 import Icon from '../../../../components/common/Icon';
 import AnswerForm from '../../../../components/organizer/AnswerForm';
 import AttendeeList from '../../../../components/organizer/AttendeeList';
+import ContributorsManager from '../../../../components/organizer/ContributorsManager';
 import EventLifecycle from '../../../../components/organizer/EventLifecycle';
-import ItemRequestForm from '../../../../components/organizer/ItemRequestForm';
+import StaffCallsManager from '../../../../components/organizer/StaffCallsManager';
 import TeamManager from '../../../../components/organizer/TeamManager';
 import ReviewsSection from '../../../../components/events/ReviewsSection';
 import { ApiError, apiGet, apiGetAllowed } from '../../../../lib/api';
@@ -31,8 +32,13 @@ export async function generateMetadata({ params }) {
 /**
  * One event, from the organizing team's side.
  *
- *   GET /api/organizer/events/:id  → + myRole, organizer, team, attendeeCount,
- *                                     questions, reviews
+ *   GET /api/organizer/events/:id  → + myRole, team, contributors,
+ *                                     attendeeCount, questions, reviews
+ *
+ * No `organizer` (org entity) field is returned here — only `org_id` on the
+ * event itself (backend/routes/organizer.js:115-126). There is no team-scoped
+ * endpoint to resolve an org name from an id, so the org is not displayed on
+ * this page.
  *
  * Check-in staff get attendance only: the backend already blanks `questions`
  * and `reviews` for that role, and the sections below follow the same rule.
@@ -51,11 +57,8 @@ export default async function OrganizerEventPage({ params }) {
   const isMain = event.myRole === 'main_organizer';
   const canEdit = isMain || event.myRole === 'co_organizer';
 
-  const [attendees, requests, items] = await Promise.all([
-    apiGetAllowed(`/api/organizer/events/${id}/attendees`),
-    canEdit ? apiGetAllowed(`/api/organizer/events/${id}/item-requests`) : null,
-    canEdit ? apiGetAllowed('/api/organizer/items') : null,
-  ]);
+  const attendees = await apiGetAllowed(`/api/organizer/events/${id}/attendees`);
+  const staffCalls = await apiGetAllowed(`/api/organizer/events/${id}/staff-calls`);
 
   const status = eventStatusMeta(event.status);
   const questions = event.questions ?? [];
@@ -95,12 +98,6 @@ export default async function OrganizerEventPage({ params }) {
           {event.attendeeCount} booked of {event.capacity} · registration closes{' '}
           {formatDate(event.registration_deadline)}
         </p>
-        {event.organizer ? (
-          <p className="event-detail__meta">
-            <Icon name="home" size={16} />
-            {event.organizer.name}
-          </p>
-        ) : null}
       </header>
 
       <div className="event-detail__layout">
@@ -116,6 +113,18 @@ export default async function OrganizerEventPage({ params }) {
           <TeamManager
             event={event}
             team={event.team ?? []}
+            canManage={isMain}
+          />
+
+          <ContributorsManager
+            event={event}
+            contributors={event.contributors ?? []}
+            canManage={isMain}
+          />
+
+          <StaffCallsManager
+            event={event}
+            calls={staffCalls ?? []}
             canManage={isMain}
           />
 
@@ -162,15 +171,6 @@ export default async function OrganizerEventPage({ params }) {
               author attendee reviews). */}
           {canEdit && reviews.length > 0 ? (
             <ReviewsSection event={event} user={null} readOnly />
-          ) : null}
-
-          {items && requests ? (
-            <ItemRequestForm
-              eventId={event.id}
-              items={items}
-              requests={requests}
-              canEdit={canEdit}
-            />
           ) : null}
         </div>
 

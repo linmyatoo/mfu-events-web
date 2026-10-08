@@ -11,14 +11,16 @@ import Button from '../common/Button';
 /**
  * Resolving a flag is what actually changes an account — nothing is automatic.
  *
- * Organizer flags: dismiss | warn | suspend | deactivate.
+ * Organizer flags: dismiss | warn | restrict | deactivate.
  * Health flags:    dismiss | warn | restrict (sets `booking_restricted`).
- * `warn` records the decision without touching the account.
+ * `warn` records the decision without touching the account. `restrict` on an
+ * organizer flag sets `organizer_restricted: true` (blocks event submission
+ * — not an account suspension).
  */
 const ORGANIZER_ACTIONS = [
   { value: 'dismiss', label: 'Dismiss', variant: 'outline' },
   { value: 'warn', label: 'Warn', variant: 'outline' },
-  { value: 'suspend', label: 'Suspend', variant: 'danger' },
+  { value: 'restrict', label: 'Restrict', variant: 'danger' },
   { value: 'deactivate', label: 'Deactivate', variant: 'danger' },
 ];
 

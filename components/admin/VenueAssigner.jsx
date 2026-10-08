@@ -35,7 +35,6 @@ export default function VenueAssigner({ event, venues }) {
 
       <p className="text-muted">
         Currently {event.venue ? event.venue.name : 'unassigned'}
-        {event.requested_venue ? ` · organizer asked for ${event.requested_venue.name}` : ''}
         {event.venue_preference ? ` · preference "${event.venue_preference}"` : ''}
         {event.expected_participants
           ? ` · expects ${event.expected_participants} people`

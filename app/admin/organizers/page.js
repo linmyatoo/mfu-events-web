@@ -12,27 +12,25 @@ export const metadata = { title: 'Organizers · Admin · MFU-Events' };
 
 const FILTERS = [
   { value: '', label: 'All' },
-  { value: 'pending', label: 'Awaiting approval' },
+  { value: 'pending', label: 'Pending' },
   { value: 'active', label: 'Active' },
-  { value: 'suspended', label: 'Suspended' },
-  { value: 'rejected', label: 'Rejected' },
+  { value: 'inactive', label: 'Inactive' },
 ];
 
 const STATUS_VARIANT = {
   active: 'success',
   pending: 'warning',
-  suspended: 'danger',
-  rejected: 'neutral',
+  inactive: 'neutral',
 };
 
 /**
- * GET /api/admin/organizers — the entities, not user accounts.
- * A user becomes an organizer by joining one of these.
+ * GET /api/admin/organizations — optional affiliations a user can join.
+ * Status flow is pending → active (activate/deactivate), not approve/reject.
  */
 export default async function AdminOrganizersPage({ searchParams }) {
   const { status = '' } = await searchParams;
   const organizers = await apiGetAllowed(
-    `/api/admin/organizers${status ? `?status=${encodeURIComponent(status)}` : ''}`
+    `/api/admin/organizations${status ? `?status=${encodeURIComponent(status)}` : ''}`
   );
 
   if (organizers === null) return <PermissionNotice area="organizers" />;
@@ -67,18 +65,13 @@ export default async function AdminOrganizersPage({ searchParams }) {
                   </div>
 
                   <p className="event-card__meta">
-                    {ORGANIZER_TYPE_LABELS[organizer.type] ?? organizer.type} ·{' '}
-                    {organizer.memberCount} member
-                    {organizer.memberCount === 1 ? '' : 's'}
+                    {ORGANIZER_TYPE_LABELS[organizer.type] ?? organizer.type}
                   </p>
 
                   <div className="event-card__footer">
                     <span className="event-card__meta event-card__venue">
                       {organizer.description || 'No description'}
                     </span>
-                    {organizer.verified ? (
-                      <span className="chip">Verified</span>
-                    ) : null}
                   </div>
                 </div>
               </Link>

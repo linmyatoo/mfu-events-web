@@ -26,6 +26,11 @@ const FILTERS = [
   { value: 'registration_closed', label: 'To complete' },
 ];
 
+/** `GET /api/admin/events` embeds `team` (per-event organizers), not `organizer`. */
+function mainOrganizerName(event) {
+  return event.team?.find((member) => member.role === 'main_organizer')?.user?.name ?? null;
+}
+
 export default async function AdminEventsPage({ searchParams }) {
   const { status = '' } = await searchParams;
   const events = await apiGetAllowed(
@@ -76,7 +81,7 @@ export default async function AdminEventsPage({ searchParams }) {
                         {venueName(event)}
                       </span>
                       <span className="chip">
-                        {event.organizer?.name ?? 'No organizer'}
+                        {mainOrganizerName(event) ?? 'No organizer'}
                       </span>
                     </div>
                   </div>

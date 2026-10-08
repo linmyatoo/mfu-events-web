@@ -9,13 +9,21 @@ import { ORGANIZER_TYPE_LABELS } from '../../../../lib/events';
 
 export const metadata = { title: 'Organizer · Admin · MFU-Events' };
 
-/** GET /api/admin/organizers/:id — the entity plus its members, each with `user`. */
+/**
+ * GET /api/admin/organizations/:id — the organization record.
+ * Members live on a separate endpoint: GET /api/admin/organizations/:id/members
+ * (each entry is `{ ...membership, user }`).
+ */
 export default async function AdminOrganizerPage({ params }) {
   const { id } = await params;
 
   let organizer;
+  let members;
   try {
-    organizer = await apiGet(`/api/admin/organizers/${id}`);
+    [organizer, members] = await Promise.all([
+      apiGet(`/api/admin/organizations/${id}`),
+      apiGet(`/api/admin/organizations/${id}/members`),
+    ]);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) notFound();
     throw error;
@@ -38,15 +46,11 @@ export default async function AdminOrganizerPage({ params }) {
             <span className="text-muted">Status</span>
             <span className="badge badge--neutral">{organizer.status}</span>
           </div>
-          <div className="booking-panel__row">
-            <span className="text-muted">Verified</span>
-            <span>{organizer.verified ? 'Yes' : 'No'}</span>
-          </div>
           <p>{organizer.description || 'No description.'}</p>
         </div>
       </section>
 
-      <OrganizerMembers organizer={organizer} members={organizer.members ?? []} />
+      <OrganizerMembers organizer={organizer} members={members ?? []} />
     </PageContainer>
   );
 }

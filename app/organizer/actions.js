@@ -17,7 +17,6 @@ import {
   apiGet,
   apiPatch,
   apiPost,
-  apiPut,
 } from '../../lib/api';
 import { fromLocalInput } from '../../lib/events';
 
@@ -59,6 +58,9 @@ function eventFieldsFrom(formData) {
     // updateEvent's safePatch (update); backend stores it as-is, null clears it.
     requested_venue_id: text('requested_venue_id'),
     requirements: text('requirements'),
+    // 'staff_scan' (default) or 'self_scan' — see checkinService.selfCheckIn.
+    // Switching to self_scan (re)generates checkin_qr_token server-side.
+    checkin_mode: text('checkin_mode') ?? 'staff_scan',
   };
 }
 
@@ -77,10 +79,14 @@ function validate(fields) {
   return null;
 }
 
-/** POST /api/organizer/organizers/:orgId/events — creates a DRAFT. */
+/**
+ * POST /api/organizer/events — creates a DRAFT. `org_id` is required; the
+ * caller must be an active member of an active org (enforced server-side,
+ * see backend/routes/organizer.js `POST /events`).
+ */
 export async function createEventAction(_prevState, formData) {
-  const orgId = String(formData.get('organizerId') ?? '');
-  if (!orgId) return { error: 'Choose which organizer is hosting this event.' };
+  const orgId = String(formData.get('org_id') ?? '');
+  if (!orgId) return { error: "Choose which organization you're creating this event for." };
 
   const fields = eventFieldsFrom(formData);
   const invalid = validate(fields);
@@ -88,7 +94,7 @@ export async function createEventAction(_prevState, formData) {
 
   let created;
   try {
-    created = await apiPost(`/api/organizer/organizers/${orgId}/events`, fields);
+    created = await apiPost('/api/organizer/events', { ...fields, org_id: orgId });
   } catch (error) {
     return failure(error);
   }
@@ -208,6 +214,134 @@ export async function removeTeamMemberAction(eventId, userId) {
   return { ok: true };
 }
 
+// --- Event contributors --------------------------------------------------------
+
+/**
+ * Contributors are a team tier below full organizer — a free-text
+ * `position_title` instead of a fixed role. Only a Main Organizer may
+ * manage them (backend: organizerService.canManageTeam === isMainOrganizer).
+ * No PATCH route exists — add/remove only.
+ */
+export async function addContributorAction(_prevState, formData) {
+  const eventId = String(formData.get('eventId') ?? '');
+  const userId = String(formData.get('userId') ?? '');
+  const positionTitle = String(formData.get('positionTitle') ?? '').trim();
+
+  if (!userId) return { error: 'Pick a person to add.' };
+
+  try {
+    await apiPost(`/api/organizer/events/${eventId}/contributors`, {
+      userId,
+      positionTitle,
+    });
+  } catch (error) {
+    return failure(error);
+  }
+  refresh(eventId);
+  return { ok: true, message: 'Added as a contributor.' };
+}
+
+export async function removeContributorAction(eventId, userId) {
+  try {
+    await apiDelete(`/api/organizer/events/${eventId}/contributors/${userId}`);
+  } catch (error) {
+    return failure(error);
+  }
+  refresh(eventId);
+  return { ok: true };
+}
+
+// --- Staff calls ---------------------------------------------------------------
+
+/**
+ * POST /api/organizer/events/:id/staff-calls — only a Main Organizer may
+ * post (backend: staffService.createCall === organizerService.isMainOrganizer).
+ * `organizer_role`/`position_title` are mutually exclusive on `target_type`;
+ * `questions` is only sent for `method: 'application'`.
+ */
+export async function postStaffCallAction(_prevState, formData) {
+  const eventId = String(formData.get('eventId') ?? '');
+  const targetType = String(formData.get('target_type') ?? '');
+  const method = String(formData.get('method') ?? '');
+  const slotsTotal = Number(formData.get('slots_total'));
+  const organizerRole = String(formData.get('organizer_role') ?? '');
+  const positionTitle = String(formData.get('position_title') ?? '').trim();
+  const questions = formData
+    .getAll('questions')
+    .map((value) => String(value).trim())
+    .filter(Boolean);
+
+  if (!targetType) return { error: 'Choose what this call is recruiting for.' };
+  if (!method) return { error: 'Choose how people join this call.' };
+  if (!Number.isInteger(slotsTotal) || slotsTotal < 1) {
+    return { error: 'Slots must be a whole number of at least 1.' };
+  }
+  if (targetType === 'organizer_role' && !organizerRole) {
+    return { error: 'Choose which organizer role this call fills.' };
+  }
+  if (targetType === 'contributor_position' && !positionTitle) {
+    return { error: 'Enter a position title.' };
+  }
+
+  const body = {
+    target_type: targetType,
+    method,
+    slots_total: slotsTotal,
+    ...(targetType === 'organizer_role' ? { organizer_role: organizerRole } : {}),
+    ...(targetType === 'contributor_position' ? { position_title: positionTitle } : {}),
+    ...(method === 'application' ? { questions } : {}),
+  };
+
+  try {
+    await apiPost(`/api/organizer/events/${eventId}/staff-calls`, body);
+  } catch (error) {
+    return failure(error);
+  }
+  refresh(eventId);
+  return { ok: true, message: 'Staff call posted.' };
+}
+
+/** POST /api/organizer/staff-calls/:callId/close — Main Organizer only. */
+export async function closeStaffCallAction(callId, eventId) {
+  try {
+    await apiPost(`/api/organizer/staff-calls/${callId}/close`);
+  } catch (error) {
+    return failure(error);
+  }
+  refresh(eventId);
+  return { ok: true };
+}
+
+/**
+ * GET /api/organizer/staff-calls/:callId/applications — reachable from the
+ * browser only through this action, same reasoning as `searchUsersAction`.
+ */
+export async function getStaffCallApplicationsAction(callId) {
+  try {
+    const applications = await apiGet(`/api/organizer/staff-calls/${callId}/applications`);
+    return { ok: true, applications };
+  } catch (error) {
+    return failure(error);
+  }
+}
+
+/**
+ * POST /api/organizer/staff-calls/:callId/applications/:appId/review —
+ * `decision` is `'accept'` or `'reject'`. Accepting creates the team/
+ * contributor row server-side (staffService._createTeamRow).
+ */
+export async function reviewApplicationAction(callId, appId, decision, eventId) {
+  try {
+    await apiPost(`/api/organizer/staff-calls/${callId}/applications/${appId}/review`, {
+      decision,
+    });
+  } catch (error) {
+    return failure(error);
+  }
+  refresh(eventId);
+  return { ok: true };
+}
+
 // --- Attendance --------------------------------------------------------------
 
 /** POST /api/organizer/checkin/scan — `{ qrToken }` from the booking's QR. */
@@ -245,7 +379,7 @@ export async function markNoShowAction(bookingId, eventId) {
   return { ok: true };
 }
 
-// --- Q&A and item requests ---------------------------------------------------
+// --- Q&A ----------------------------------------------------------------------
 
 export async function answerQuestionAction(_prevState, formData) {
   const eventId = String(formData.get('eventId') ?? '');
@@ -262,27 +396,4 @@ export async function answerQuestionAction(_prevState, formData) {
   refresh(eventId);
   revalidatePath(`/events/${eventId}`);
   return { ok: true, message: 'Answer posted.' };
-}
-
-/**
- * PUT /api/organizer/events/:id/item-requests — replaces every pending row,
- * so the form always submits the complete list.
- */
-export async function saveItemRequestsAction(_prevState, formData) {
-  const eventId = String(formData.get('eventId') ?? '');
-  const requests = [];
-
-  for (const [key, value] of formData.entries()) {
-    if (!key.startsWith('qty:')) continue;
-    const quantity = Number(value);
-    if (quantity > 0) requests.push({ item_id: key.slice(4), quantity });
-  }
-
-  try {
-    await apiPut(`/api/organizer/events/${eventId}/item-requests`, { requests });
-  } catch (error) {
-    return failure(error);
-  }
-  refresh(eventId);
-  return { ok: true, message: 'Item requests saved and sent for admin approval.' };
 }

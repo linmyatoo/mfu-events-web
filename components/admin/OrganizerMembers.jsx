@@ -15,16 +15,14 @@ import Button from '../common/Button';
 const initialState = { error: null, message: null };
 
 const ROLES = [
-  { value: 'owner', label: 'Owner' },
-  { value: 'president', label: 'President' },
-  { value: 'event_manager', label: 'Event manager' },
+  { value: 'org_manager', label: 'Org manager' },
   { value: 'member', label: 'Member' },
 ];
 
 /**
- * Membership of an Organizer entity — who belongs to the club, and with what
- * standing. Distinct from the per-event team; only owner, president and
- * event_manager may create events for it.
+ * Membership of an Organization — who belongs to it, and with what standing.
+ * Distinct from the per-event team. Any active member (org_manager or
+ * member) may create events for it — the backend has no per-role gate.
  */
 export default function OrganizerMembers({ organizer, members }) {
   const [state, formAction, adding] = useActionState(addOrganizerMemberAction, initialState);
@@ -53,34 +51,37 @@ export default function OrganizerMembers({ organizer, members }) {
 
   return (
     <>
-      {organizer.status === 'pending' ? (
-        <section className="page-section">
-          <div className="card card--padded stack">
+      <section className="page-section">
+        <div className="card card--padded stack">
+          {organizer.status === 'pending' ? (
             <p>
-              This organizer is awaiting verification. Approving it lets its
-              members create events.
+              This organization is pending. Activating it lets its members
+              create events under it.
             </p>
-            <div className="booking-panel__row">
-              <Button
-                variant="primary"
-                size="sm"
-                disabled={pending}
-                onClick={() => run(() => organizerDecisionAction(organizer.id, 'approve'))}
-              >
-                Approve
-              </Button>
+          ) : null}
+          <div className="booking-panel__row">
+            {organizer.status === 'active' ? (
               <Button
                 variant="danger"
                 size="sm"
                 disabled={pending}
-                onClick={() => run(() => organizerDecisionAction(organizer.id, 'reject'))}
+                onClick={() => run(() => organizerDecisionAction(organizer.id, 'deactivate'))}
               >
-                Reject
+                Deactivate
               </Button>
-            </div>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                disabled={pending}
+                onClick={() => run(() => organizerDecisionAction(organizer.id, 'activate'))}
+              >
+                Activate
+              </Button>
+            )}
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
       <section className="page-section" aria-labelledby="members-heading">
         <h2 className="section-title" id="members-heading">

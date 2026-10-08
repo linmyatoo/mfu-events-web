@@ -1,27 +1,24 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 import Icon from '../../../../components/common/Icon';
 import EventForm from '../../../../components/organizer/EventForm';
 import { apiGet } from '../../../../lib/api';
-import { EVENT_MANAGING_ROLES } from '../../../../lib/events';
 import { requireOrganizer } from '../../../../lib/session';
 import { createEventAction } from '../../actions';
 
 export const metadata = { title: 'New event · MFU-Events' };
 
-/** POST /api/organizer/organizers/:orgId/events — always creates a DRAFT. */
+/** POST /api/organizer/events — always creates a DRAFT; `org_id` is required. */
 export default async function NewEventPage() {
   const { memberships } = await requireOrganizer();
-  const managing = memberships.filter((membership) =>
-    EVENT_MANAGING_ROLES.includes(membership.role)
-  );
-
-  if (managing.length === 0) redirect('/organizer');
+  // The backend only checks active membership in an active org (`isMember()`
+  // has no role condition) — not restricted to EVENT_MANAGING_ROLES.
+  const eligible = memberships.filter((membership) => membership.org?.status === 'active');
 
   // No start/end time chosen yet, so every active venue reads as available —
-  // same GET /api/organizer/venues used by the read-only venues page.
-  const venues = await apiGet('/api/organizer/venues');
+  // same GET /api/organizer/venues used by the read-only venues page. Only
+  // fetched when there's a form to show it in.
+  const venues = eligible.length > 0 ? await apiGet('/api/organizer/venues') : [];
 
   return (
     <div className="page-container">
@@ -38,12 +35,22 @@ export default async function NewEventPage() {
         </p>
       </div>
 
-      <EventForm
-        action={createEventAction}
-        organizers={managing}
-        venues={venues}
-        submitLabel="Create draft"
-      />
+      {eligible.length === 0 ? (
+        <div className="card card--padded">
+          <p>
+            You need to be an active member of an active organization to
+            create events. Contact your organization&apos;s manager or an
+            admin to be added.
+          </p>
+        </div>
+      ) : (
+        <EventForm
+          action={createEventAction}
+          organizers={eligible}
+          venues={venues}
+          submitLabel="Create draft"
+        />
+      )}
     </div>
   );
 }

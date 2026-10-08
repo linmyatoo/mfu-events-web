@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import LoginForm from '../../components/auth/LoginForm';
@@ -30,6 +31,12 @@ export default async function LoginPage() {
         </div>
 
         <LoginForm />
+
+        <p className="field__hint">
+          Don&apos;t have an account? <Link href="/register">Register</Link>
+          {' · '}
+          <Link href="/forgot-password">Forgot password?</Link>
+        </p>
       </div>
     </main>
   );

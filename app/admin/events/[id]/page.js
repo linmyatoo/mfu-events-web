@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import Icon from '../../../../components/common/Icon';
 import EventReview from '../../../../components/admin/EventReview';
-import ItemRequestReview from '../../../../components/admin/ItemRequestReview';
+import RequesterHealthPanel from '../../../../components/admin/RequesterHealthPanel';
 import VenueAssigner from '../../../../components/admin/VenueAssigner';
 import { ApiError, apiGet, apiGetAllowed } from '../../../../lib/api';
 import {
@@ -41,12 +41,9 @@ export default async function AdminEventPage({ params }) {
     throw error;
   }
 
-  const [venues, requests] = await Promise.all([
-    VENUE_STAGES.includes(event.status)
-      ? apiGetAllowed(`/api/admin/venues/for-event/${id}`)
-      : null,
-    apiGetAllowed(`/api/admin/events/${id}/item-requests`),
-  ]);
+  const venues = VENUE_STAGES.includes(event.status)
+    ? await apiGetAllowed(`/api/admin/venues/for-event/${id}`)
+    : null;
 
   const status = eventStatusMeta(event.status);
 
@@ -87,8 +84,10 @@ export default async function AdminEventPage({ params }) {
           · registration closes {formatDate(event.registration_deadline)}
         </p>
         <p className="event-detail__meta">
-          <Icon name="home" size={16} />
-          {event.organizer?.name ?? 'No organizer entity'}
+          <Icon name="user" size={16} />
+          {event.requester_snapshot
+            ? `Requested by ${event.requester_snapshot.name}`
+            : 'Created directly by the organizing team'}
         </p>
       </header>
 
@@ -101,6 +100,8 @@ export default async function AdminEventPage({ params }) {
               <p className="text-muted">Requirements: {event.requirements}</p>
             ) : null}
           </section>
+
+          <RequesterHealthPanel snapshot={event.requester_snapshot} />
 
           <section className="page-section">
             <h2 className="section-title">Event team</h2>
@@ -127,11 +128,34 @@ export default async function AdminEventPage({ params }) {
             )}
           </section>
 
-          {venues ? <VenueAssigner event={event} venues={venues} /> : null}
+          <section className="page-section" aria-labelledby="contributors-heading">
+            <h2 className="section-title" id="contributors-heading">
+              Contributors ({(event.contributors ?? []).length})
+            </h2>
+            {(event.contributors ?? []).length === 0 ? (
+              <p className="text-muted">No contributors on this event.</p>
+            ) : (
+              <ul className="organizer-list">
+                {event.contributors.map((contributor) => (
+                  <li className="organizer" key={contributor.id}>
+                    <span className="organizer__avatar" aria-hidden="true">
+                      {initialsOf(contributor.user?.name ?? '')}
+                    </span>
+                    <span>
+                      <span className="organizer__name">
+                        {contributor.user?.name ?? 'Unknown'}
+                      </span>
+                      <span className="organizer__role text-muted">
+                        {contributor.position_title}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
 
-          {requests ? (
-            <ItemRequestReview requests={requests} eventId={event.id} />
-          ) : null}
+          {venues ? <VenueAssigner event={event} venues={venues} /> : null}
         </div>
 
         <EventReview event={event} />

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import PageContainer from '../../../components/layout/PageContainer';
 import { apiGet } from '../../../lib/api';
 import {
-  EVENT_MANAGING_ROLES,
   eventStatusMeta,
   formatEventWhen,
   isPastEvent,
@@ -22,20 +21,12 @@ export const metadata = { title: 'Check-in · MFU-Events' };
  * attendee roster of events happening around now.
  */
 export default async function CheckInPage() {
-  const { memberships } = await requireOrganizer();
-  const managing = memberships.filter((membership) =>
-    EVENT_MANAGING_ROLES.includes(membership.role)
-  );
+  await requireOrganizer();
 
-  const lists = await Promise.all(
-    managing.map((membership) =>
-      apiGet(`/api/organizer/organizers/${membership.organizer_id}/events`)
-    )
-  );
+  const events = await apiGet('/api/organizer/events');
 
   const now = new Date();
-  const running = lists
-    .flat()
+  const running = events
     .filter(
       (event) =>
         ['published', 'registration_open', 'registration_closed'].includes(

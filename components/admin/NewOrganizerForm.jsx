@@ -8,7 +8,11 @@ import Button from '../common/Button';
 
 const initialState = { error: null };
 
-/** POST /api/admin/organizers — created already verified and active. */
+/**
+ * POST /api/admin/organizers — the admin-direct alias of
+ * POST /api/admin/organizations that creates the org already `active`
+ * (skips the normal pending → active step).
+ */
 export default function NewOrganizerForm() {
   const [state, formAction, pending] = useActionState(createOrganizerAction, initialState);
 

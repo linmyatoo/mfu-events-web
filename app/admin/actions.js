@@ -128,6 +128,43 @@ export async function createPointEventAction(_prevState, formData) {
   redirect(`/admin/events/${created.id}`);
 }
 
+// --- Event Requests -----------------------------------------------------------
+
+/**
+ * POST /api/admin/event-requests/:id/approve|reject|needs-info.
+ *
+ * `approve` takes no body and answers `{ request, event }` — the draft event
+ * created from the request (`source_request_id` set, requester appointed
+ * `main_organizer`). `reject`/`needs-info` carry `{ feedback }`, which the
+ * requester reads, so it's required (same pattern as `adminEventAction`'s
+ * `reject`/`request-changes` branch).
+ */
+export async function eventRequestDecisionAction(requestId, step, feedback) {
+  if (!['approve', 'reject', 'needs-info'].includes(step)) {
+    return { error: `Unknown action "${step}".` };
+  }
+
+  const needsFeedback = step === 'reject' || step === 'needs-info';
+  if (needsFeedback && !String(feedback ?? '').trim()) {
+    return { error: 'Explain what needs to change — the requester sees this note.' };
+  }
+
+  let result;
+  try {
+    result = await apiPost(
+      `/api/admin/event-requests/${requestId}/${step}`,
+      needsFeedback ? { feedback } : undefined
+    );
+  } catch (error) {
+    return failure(error);
+  }
+
+  revalidatePath('/admin/event-requests');
+  revalidatePath(`/admin/event-requests/${requestId}`);
+  if (step === 'approve') revalidatePath('/admin');
+  return { ok: true, event: result?.event };
+}
+
 // --- Users -------------------------------------------------------------------
 
 export async function userStatusAction(userId, step) {
@@ -144,8 +181,14 @@ export async function userStatusAction(userId, step) {
   return { ok: true };
 }
 
-// --- Organizers --------------------------------------------------------------
+// --- Organizers (Organization entity + membership) ----------------------------
 
+/**
+ * POST /api/admin/organizers — alias of POST /api/admin/organizations that
+ * creates the org in 'active' status immediately (admin-direct), instead of
+ * the normal 'pending' default. Kept so admin-created orgs are usable right
+ * away without a separate activation step.
+ */
 export async function createOrganizerAction(_prevState, formData) {
   const name = String(formData.get('name') ?? '').trim();
   const type = String(formData.get('type') ?? '');
@@ -164,10 +207,11 @@ export async function createOrganizerAction(_prevState, formData) {
   redirect(`/admin/organizers/${organizer.id}`);
 }
 
+/** step: 'activate' | 'deactivate'. Status flow is pending → active, no approve/reject. */
 export async function organizerDecisionAction(orgId, step) {
-  if (!['approve', 'reject'].includes(step)) return { error: `Unknown action "${step}".` };
+  if (!['activate', 'deactivate'].includes(step)) return { error: `Unknown action "${step}".` };
   try {
-    await apiPost(`/api/admin/organizers/${orgId}/${step}`);
+    await apiPost(`/api/admin/organizations/${orgId}/${step}`);
   } catch (error) {
     return failure(error);
   }
@@ -184,7 +228,8 @@ export async function addOrganizerMemberAction(_prevState, formData) {
   if (!userId) return { error: 'Pick a person to add.' };
 
   try {
-    await apiPost(`/api/admin/organizers/${orgId}/members`, { userId, role });
+    // Backend reads `user_id`, not `userId`, from the body.
+    await apiPost(`/api/admin/organizations/${orgId}/members`, { user_id: userId, role });
   } catch (error) {
     return failure(error);
   }
@@ -194,7 +239,7 @@ export async function addOrganizerMemberAction(_prevState, formData) {
 
 export async function updateOrganizerMemberAction(orgId, userId, role) {
   try {
-    await apiPatch(`/api/admin/organizers/${orgId}/members/${userId}`, { role });
+    await apiPatch(`/api/admin/organizations/${orgId}/members/${userId}`, { role });
   } catch (error) {
     return failure(error);
   }
@@ -204,7 +249,7 @@ export async function updateOrganizerMemberAction(orgId, userId, role) {
 
 export async function removeOrganizerMemberAction(orgId, userId) {
   try {
-    await apiDelete(`/api/admin/organizers/${orgId}/members/${userId}`);
+    await apiDelete(`/api/admin/organizations/${orgId}/members/${userId}`);
   } catch (error) {
     return failure(error);
   }
@@ -251,59 +296,9 @@ export async function saveVenueAction(_prevState, formData) {
   return { ok: true, message: venueId ? 'Venue updated.' : 'Venue created.' };
 }
 
-// --- Items -------------------------------------------------------------------
-
-export async function saveItemAction(_prevState, formData) {
-  const itemId = String(formData.get('itemId') ?? '');
-  const name = String(formData.get('name') ?? '').trim();
-  const totalQuantity = Number(formData.get('total_quantity'));
-
-  if (!name) return { error: 'A name is required.' };
-  if (!Number.isFinite(totalQuantity) || totalQuantity < 1) {
-    return { error: 'Total quantity must be at least 1.' };
-  }
-
-  const body = {
-    name,
-    description: String(formData.get('description') ?? '').trim(),
-    total_quantity: totalQuantity,
-  };
-
-  try {
-    if (itemId) {
-      // `available_quantity` is derived — itemService strips it from a patch.
-      body.status = String(formData.get('status') ?? 'active');
-      await apiPatch(`/api/admin/items/${itemId}`, body);
-    } else {
-      await apiPost('/api/admin/items', body);
-    }
-  } catch (error) {
-    return failure(error);
-  }
-
-  revalidatePath('/admin/items');
-  return { ok: true, message: itemId ? 'Item updated.' : 'Item created.' };
-}
-
-export async function resolveItemRequestAction(requestId, step, quantity, eventId) {
-  if (!['approve', 'reject'].includes(step)) return { error: `Unknown action "${step}".` };
-
-  try {
-    await apiPost(
-      `/api/admin/item-requests/${requestId}/${step}`,
-      step === 'approve' ? { quantity } : undefined
-    );
-  } catch (error) {
-    return failure(error);
-  }
-  revalidatePath('/admin/items');
-  if (eventId) revalidatePath(`/admin/events/${eventId}`);
-  return { ok: true };
-}
-
 // --- Flags -------------------------------------------------------------------
 
-/** action: dismiss | warn | suspend | deactivate */
+/** action: dismiss | warn | restrict | deactivate */
 export async function resolveOrganizerFlagAction(flagId, action) {
   try {
     await apiPost(`/api/admin/flags/organizers/${flagId}/resolve`, { action });
@@ -354,4 +349,89 @@ export async function runPointsSyncAction() {
   }
   revalidatePath('/admin/points');
   return { ok: true, synced_count: result.synced_count };
+}
+
+// --- Platform settings ---------------------------------------------------------
+
+/**
+ * PATCH /api/admin/settings. Body shape mirrors `DEFAULT_SETTINGS` in
+ * MFU-Events/backend/lib/constants.js exactly — the backend stores settings
+ * as `{key, value}` rows and merges whatever is posted onto the current
+ * values (`{ ...current, ...req.body }`), so a full object is safe to send.
+ * The three `_tiers` fields are comma-separated ascending point thresholds.
+ */
+function parseTierList(raw, fieldLabel) {
+  const pieces = String(raw ?? '')
+    .split(',')
+    .map((piece) => piece.trim())
+    .filter(Boolean);
+  const numbers = pieces.map(Number);
+  if (numbers.length === 0 || numbers.some((n) => !Number.isFinite(n))) {
+    throw new Error(`${fieldLabel} must be a comma-separated list of numbers.`);
+  }
+  return numbers;
+}
+
+function parseRequiredNumber(formData, field, label) {
+  const value = Number(formData.get(field));
+  if (!Number.isFinite(value)) throw new Error(`${label} must be a number.`);
+  return value;
+}
+
+export async function updateSettingsAction(_prevState, formData) {
+  let body;
+  try {
+    body = {
+      negative_rating_cutoff: parseRequiredNumber(formData, 'negative_rating_cutoff', 'Negative rating cutoff'),
+      sentiment_negative_threshold: parseRequiredNumber(
+        formData,
+        'sentiment_negative_threshold',
+        'Sentiment negative threshold'
+      ),
+      negative_ratio_threshold: parseRequiredNumber(
+        formData,
+        'negative_ratio_threshold',
+        'Negative ratio threshold'
+      ),
+      minimum_review_volume: parseRequiredNumber(formData, 'minimum_review_volume', 'Minimum review volume'),
+      evaluation_window_days: parseRequiredNumber(formData, 'evaluation_window_days', 'Evaluation window (days)'),
+      health_noshow_penalty: parseRequiredNumber(formData, 'health_noshow_penalty', 'No-show penalty'),
+      health_review_reward: parseRequiredNumber(formData, 'health_review_reward', 'Review reward'),
+      health_restriction_threshold: parseRequiredNumber(
+        formData,
+        'health_restriction_threshold',
+        'Restriction threshold'
+      ),
+      health_starting_score: parseRequiredNumber(formData, 'health_starting_score', 'Starting health score'),
+      checkin_window_grace_minutes: parseRequiredNumber(
+        formData,
+        'checkin_window_grace_minutes',
+        'Check-in grace period (minutes)'
+      ),
+      review_edit_window_days: parseRequiredNumber(
+        formData,
+        'review_edit_window_days',
+        'Review edit window (days)'
+      ),
+      sentiment_timeout_hours: parseRequiredNumber(
+        formData,
+        'sentiment_timeout_hours',
+        'Sentiment timeout (hours)'
+      ),
+      attendee_tiers: parseTierList(formData.get('attendee_tiers'), 'Attendee tiers'),
+      organizer_tiers: parseTierList(formData.get('organizer_tiers'), 'Organizer tiers'),
+      contributor_tiers: parseTierList(formData.get('contributor_tiers'), 'Contributor tiers'),
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+
+  try {
+    await apiPatch('/api/admin/settings', body);
+  } catch (error) {
+    return failure(error);
+  }
+
+  revalidatePath('/admin/settings');
+  return { ok: true, message: 'Settings saved.' };
 }

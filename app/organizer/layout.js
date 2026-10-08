@@ -7,9 +7,10 @@ export const dynamic = 'force-dynamic';
 /**
  * Chrome for the Organizer portal.
  *
- * Access is not a user role — it is having an active OrganizerMember row.
- * `requireOrganizer` sends accounts without one back to the User portal; the
- * backend checks the same thing per request, inline.
+ * Any authenticated user can reach the Organizer portal UI regardless of org
+ * membership — `requireOrganizer` only requires a signed-in session.
+ * Org membership still gates individual actions (e.g. creating an event),
+ * which the backend enforces per request.
  */
 export default async function OrganizerLayout({ children }) {
   const { user, memberships } = await requireOrganizer();
@@ -26,7 +27,7 @@ export default async function OrganizerLayout({ children }) {
       portal={PORTALS.ORGANIZER}
       sidebarNote={{
         title: 'Organizing for',
-        body: names.length ? names.join(', ') : 'No organizer entity yet.',
+        body: names.length ? names.join(', ') : 'Not affiliated with an organization.',
       }}
     >
       {children}

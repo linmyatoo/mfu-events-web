@@ -1,7 +1,6 @@
 import Icon from '../../../components/common/Icon';
 import LogoutButton from '../../../components/auth/LogoutButton';
 import PageContainer from '../../../components/layout/PageContainer';
-import { ApiError, apiGet } from '../../../lib/api';
 import { requireUser } from '../../../lib/session';
 import { healthBand, initialsOf } from '../../../lib/events';
 
@@ -11,7 +10,6 @@ const TILES = [
   { href: '/bookings', label: 'My bookings', icon: 'ticket' },
   { href: '/points', label: 'Points', icon: 'sparkle' },
   { href: '/health', label: 'Account health', icon: 'heart' },
-  { href: '/items', label: 'Equipment catalogue', icon: 'search' },
 ];
 
 function Row({ label, value }) {
@@ -24,19 +22,12 @@ function Row({ label, value }) {
 }
 
 /**
- * GET /api/user/me plus the organizer memberships from
- * GET /api/user/me/organizers — a user can belong to an Organizer entity
- * without that changing their role here (organizer is an entity, not a role).
+ * GET /api/user/me — organizer org memberships are no longer shown here;
+ * see GET /api/organizer/my-organizers (lib/session.js's getMyOrganizers())
+ * for membership data, used by the organizer/admin portals instead.
  */
 export default async function ProfilePage() {
   const user = await requireUser();
-
-  let organizers = [];
-  try {
-    organizers = await apiGet('/api/user/me/organizers');
-  } catch (error) {
-    if (!(error instanceof ApiError)) throw error;
-  }
 
   const band = user.health_score == null ? null : healthBand(user.health_score);
 
@@ -75,32 +66,6 @@ export default async function ProfilePage() {
           ) : null}
         </div>
       </section>
-
-      {organizers.length > 0 ? (
-        <section className="page-section">
-          <h2 className="section-title">Organizer memberships</h2>
-          <ul className="stack">
-            {organizers.map((membership) => (
-              <li
-                className="card card--padded"
-                key={membership.id ?? membership.organizer_id}
-              >
-                <div className="event-card__heading">
-                  <h3 className="event-card__title">
-                    {membership.organizer?.name ?? 'Organizer'}
-                  </h3>
-                  <span className="badge badge--info">
-                    {(membership.role ?? '').replace('_', ' ')}
-                  </span>
-                </div>
-                <p className="event-card__meta">
-                  Event management happens in the organizer app.
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
 
       <section className="page-section">
         <h2 className="section-title">Shortcuts</h2>

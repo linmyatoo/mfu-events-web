@@ -57,11 +57,6 @@ export default async function VenueSchedulePage() {
                           <Icon name="calendar" size={16} />
                           {formatEventWhen(event)}
                         </p>
-                        <div className="event-card__footer">
-                          <span className="chip">
-                            {event.organizer?.name ?? 'No organizer'}
-                          </span>
-                        </div>
                       </div>
                     </Link>
                   </li>
