@@ -89,9 +89,9 @@ export default function PointEventForm({ users }) {
 
       <fieldset className="field">
         <legend className="field__label">Organizing team</legend>
-        <div className="stack">
+        <div className="organizer-rows">
           {rows.map((row, index) => (
-            <div className="booking-panel__row" key={index}>
+            <div className="organizer-row" key={index}>
               <label className="visually-hidden" htmlFor={`organizer-user-${index}`}>
                 Organizer
               </label>
