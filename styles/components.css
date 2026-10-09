@@ -671,14 +671,14 @@
   transform: rotate(180deg);
 }
 
-.event-detail__header {
-  margin-bottom: var(--space-5);
-}
-
 /* Title block sits under the banner with the page's 16px gutter, matching
-   the Padding.fromLTRB(16, 16, 16, 24) in the Flutter detail page. */
+   the Padding.fromLTRB(16, 16, 16, 24) in the Flutter detail page. Bottom
+   margin lives here (not on .event-detail__header) so every page using
+   .event-detail__intro as a bare <header> gets the same gap before the
+   next section, whether or not it's wrapped in .event-detail__header. */
 .event-detail__intro {
   padding-top: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 .event-detail__tags {
