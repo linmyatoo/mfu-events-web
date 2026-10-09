@@ -15,26 +15,34 @@ export default async function RegisterPage() {
   if (await getSession()) redirect('/');
 
   return (
-    <main className="app-main">
-      <div className="page-container">
-        <div className="page-header">
-          <span className="app-header__brand">
-            <span className="app-header__logo">
-              <Image src="/mfu-logo.png" alt="" width={44} height={44} />
-            </span>
-            <span>MFU-Events</span>
+    <main className="auth-main">
+      <div className="auth-shell">
+        <div className="auth-brand">
+          <span className="auth-brand__logo">
+            <Image src="/mfu-logo.png" alt="" width={92} height={92} priority />
           </span>
+          <span className="auth-brand__name">MFU-Events</span>
+        </div>
+
+        <div className="auth-heading">
           <h1 className="page-header__title">Create an account</h1>
           <p className="page-header__subtitle">
             Register with your university email to start booking events.
           </p>
         </div>
 
-        <RegisterForm />
+        <div className="auth-card">
+          <RegisterForm />
+        </div>
 
-        <p className="field__hint">
-          Already have an account? <Link href="/login">Sign in</Link>
-        </p>
+        <div className="auth-actions">
+          <p className="auth-actions__register">
+            Already have an account?{' '}
+            <Link href="/login" className="auth-actions__link auth-actions__link--primary">
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </main>
   );
