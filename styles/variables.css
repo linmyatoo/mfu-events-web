@@ -77,10 +77,12 @@
   --space-8: 32px;
   --space-10: 40px;
 
-  /* Typography — Bold Campus Energy: Inter body, Space Grotesk display. */
+  /* Typography — single app-wide font (Inter). --font-family-display is
+     kept as an alias so heading/brand selectors stay self-documenting,
+     not because it points at a different typeface. */
   --font-family: var(--font-inter), "Segoe UI", Roboto, "Helvetica Neue",
     Arial, system-ui, -apple-system, sans-serif;
-  --font-family-display: var(--font-space-grotesk), var(--font-family);
+  --font-family-display: var(--font-family);
   /* Card border is transparent — card separation is shadow-driven. */
   --card-border: transparent;
   /* Sizes are the Flutter TextStyle values: body 14, card title 16,

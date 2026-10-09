@@ -7,7 +7,7 @@ import '../styles/responsive.css';
 import Script from 'next/script';
 
 import BrandBadge from '../components/layout/BrandBadge';
-import { inter, spaceGrotesk } from '../lib/fonts';
+import { inter } from '../lib/fonts';
 
 export const metadata = {
   title: 'MFU-Events',
@@ -37,7 +37,7 @@ const THEME_BOOT_SCRIPT = `
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
         <Script id="theme-boot" strategy="beforeInteractive">
           {THEME_BOOT_SCRIPT}
