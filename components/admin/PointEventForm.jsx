@@ -135,7 +135,13 @@ export default function PointEventForm({ users }) {
             </div>
           ))}
         </div>
-        <Button variant="outline" size="sm" type="button" onClick={addRow}>
+        <Button
+          variant="outline"
+          size="sm"
+          type="button"
+          className="organizer-rows__add"
+          onClick={addRow}
+        >
           + Add organizer
         </Button>
       </fieldset>

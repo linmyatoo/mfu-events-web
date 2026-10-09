@@ -219,6 +219,10 @@
   min-width: 0;
 }
 
+.organizer-rows__add {
+  margin-top: var(--space-4);
+}
+
 /* ── Cards ──────────────────────────────────────────────────────────── */
 
 .card {
