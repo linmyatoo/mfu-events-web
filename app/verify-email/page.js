@@ -32,31 +32,37 @@ export default async function VerifyEmailPage({ searchParams }) {
   }
 
   return (
-    <main className="app-main">
-      <div className="page-container">
-        <div className="page-header">
-          <span className="app-header__brand">
-            <span className="app-header__logo">
-              <Image src="/mfu-logo.png" alt="" width={44} height={44} />
-            </span>
-            <span>MFU-Events</span>
+    <main className="auth-main">
+      <div className="auth-shell">
+        <div className="auth-brand">
+          <span className="auth-brand__logo">
+            <Image src="/mfu-logo.png" alt="" width={92} height={92} priority />
           </span>
+          <span className="auth-brand__name">MFU-Events</span>
+        </div>
+
+        <div className="auth-heading">
           <h1 className="page-header__title">Email verification</h1>
         </div>
 
-        <div className="card card--padded">
-          {message ? (
-            <p className="notice notice--success" role="status">
-              {message}
-            </p>
-          ) : (
-            <p className="field__error" role="alert">
-              {error}
-            </p>
-          )}
-          <p className="field__hint">
-            <Link href="/login">Go to sign in</Link>
-          </p>
+        <div className="auth-card">
+          <div className="card card--padded">
+            {message ? (
+              <p className="notice notice--success" role="status">
+                {message}
+              </p>
+            ) : (
+              <p className="field__error" role="alert">
+                {error}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="auth-actions">
+          <Link href="/login" className="auth-actions__link auth-actions__link--primary">
+            Go to sign in
+          </Link>
         </div>
       </div>
     </main>
