@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { bookingStatusMeta, formatEventWhen, venueName } from '../../lib/events';
+import { EVENT_STATUS, bookingStatusMeta, eventStatusMeta, formatEventWhen, venueName } from '../../lib/events';
 import Icon from '../common/Icon';
 
 /**
@@ -12,7 +12,12 @@ import Icon from '../common/Icon';
  */
 export default function EventCard({ event }) {
   const booking = event.myBooking;
-  const status = booking ? bookingStatusMeta(booking.status) : null;
+  const status =
+    event.status === EVENT_STATUS.CANCELLED
+      ? eventStatusMeta(event.status)
+      : booking
+        ? bookingStatusMeta(booking.status)
+        : null;
 
   return (
     <Link href={`/events/${event.id}`} className="event-card">
