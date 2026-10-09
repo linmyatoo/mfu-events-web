@@ -245,17 +245,23 @@
 }
 
 .page-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
   margin-bottom: var(--space-6);
 }
 
 .page-header__title {
-  margin-bottom: var(--space-1);
   font-family: var(--font-family-display);
 }
 
 .page-header__subtitle {
   color: var(--muted-text-color);
   margin: 0;
+}
+
+.page-header__actions {
+  margin-top: var(--space-2);
 }
 
 .page-section + .page-section {

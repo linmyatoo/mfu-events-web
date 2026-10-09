@@ -1,6 +1,6 @@
 # Phase 1 — Shared primitive fixes
 
-Status: not started
+Status: done
 
 ## Why first
 
@@ -126,6 +126,17 @@ stays as-is — it's already correct; do not reduce it to match the others.
 5. Spot check a page with no `actions` (e.g. `/bookings`) still renders with
    the same title→subtitle spacing as before (no regression from the flex
    conversion).
+
+## Verification log (2026-10-09)
+
+- `npm run lint` — passed, no new errors (no output from eslint).
+- `npm run build` — passed, `next build` compiled successfully and generated
+  all 42 routes with no JSX/CSS syntax errors.
+- Steps 3-5 (manual/visual) — **not performed**, no browser tooling available
+  in this session. Still need a human/browser pass on `/organizer`,
+  `/event-requests`, `/admin`, `/admin/points`, `/`, and `/bookings` to
+  confirm the gap renders as expected and no regression on pages without
+  `actions`.
 
 ## Rollback
 
