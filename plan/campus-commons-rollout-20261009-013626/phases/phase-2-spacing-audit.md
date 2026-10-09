@@ -1,7 +1,35 @@
 # Phase 2 — Spacing audit methodology + run
 
-Status: not started
+Status: done
 Depends on: Phase 1 merged (audit the post-fix state, not the pre-fix state)
+
+Ran both the static grep pass and a logged-in browser pass against
+`localhost:3000` (post-Phase-1 state). Full results, file:line references,
+and the triaged punch list are in `research/punch-list.md`. Headline finding:
+a 6-page cramped-header bug on `.event-detail__intro` (used as a bare
+`<header>` without the `.event-detail__header` margin-bottom that the one
+working page has) — visually confirmed on 3 of the 6 pages
+(`app/organizer/events/[id]/page.js`, `app/admin/events/[id]/page.js`,
+`app/admin/event-requests/[id]/page.js`), same structure on the other 3
+(`app/(app)/staff-calls/[id]/page.js`, `app/organizer/staff-calls/[id]/page.js`,
+`app/(app)/event-requests/[id]/page.js`). Also found `.app-header__points`'s
+6px icon/text gap (should be 8px like the rest) and several lower-priority
+off-scale paddings (`.chip`, `.badge`, `.portal-switch__item`, `.rail`,
+`.mobile-nav__link`).
+
+**Not fully covered:**
+- `/login` and `/register` could not be visually reached — the session
+  stayed authenticated throughout (both pages `redirect('/')` server-side
+  when a session cookie exists) and no logged-out pass was run. Source was
+  read instead; confirmed both use `.page-header` directly so Phase 1's fix
+  should apply, but needs a real logged-out visual check in Phase 6.
+- The 1024px/768px/480px breakpoints were **not visually confirmed** for any
+  page: `mcp__claude-in-chrome__resize_window` did not actually change the
+  browser viewport this session (confirmed via `window.innerWidth` staying
+  fixed across repeated resize calls, including in a fresh tab) — only the
+  ≥1280px desktop tier was visually tested. Breakpoint-dependent findings
+  (e.g. `.mobile-nav__link`) are CSS-reasoned only and need re-verification
+  once a working resize/device-emulation path is available.
 
 ## Why this phase exists
 
