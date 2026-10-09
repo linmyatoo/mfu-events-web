@@ -1,6 +1,6 @@
 # Campus Commons rollout + spacing audit
 
-**Status:** planned, not started
+**Status:** in progress — Phases 1-5 done (shared primitives, spacing audit, user/organizer/admin portal passes); Phase 6 (auth + misc) and Phase 7 (non-goal write-up) remain.
 **Created:** 2026-10-09
 **Owner thread:** "I want to change the whole web UI... text too closed to boxes" (organizer My Events screenshot)
 
