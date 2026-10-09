@@ -1,6 +1,6 @@
 # Campus Commons rollout + spacing audit
 
-**Status:** in progress — Phases 1-6 done (shared primitives, spacing audit, user/organizer/admin/auth+misc portal passes, all confirmation-only with no regressions found); Phase 7 (non-goal write-up) remains. Note: logged-out browser verification of `/login`/`/register` is still outstanding across Phases 2 and 6 — no browser/MCP tool was available in either run.
+**Status:** complete (Phases 1-7 done). All code changes committed (shared primitives fix, spacing audit, user/organizer/admin/auth+misc portal confirmation passes with no regressions); Phase 7 backend follow-ups documented. **Outstanding:** Logged-out browser verification of `/login`/`/register` and responsive-breakpoint visual audit (1024/768/480px × light/dark) was never performed in any phase — no browser/MCP tool was available. This manual verification across all portals is the one piece still owed before fully closing the rollout.
 **Created:** 2026-10-09
 **Owner thread:** "I want to change the whole web UI... text too closed to boxes" (organizer My Events screenshot)
 
