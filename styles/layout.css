@@ -382,6 +382,136 @@
   background-color: var(--primary-tint);
 }
 
+/* ── Auth pages (sign in / register / forgot password) ────────────────
+ * Chrome-less screens — no AppShell header/sidebar — so they get their
+ * own centered shell instead of .app-main/.page-container, which carry
+ * sidebar- and mobile-nav-aware padding meant for the logged-in layout.
+ */
+
+.auth-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-6) var(--space-4);
+  background: radial-gradient(
+      circle at 50% -10%,
+      rgba(26, 63, 196, 0.06),
+      transparent 60%
+    ),
+    var(--background-color);
+}
+
+.auth-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.auth-brand__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+}
+
+.auth-brand__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.auth-brand__name {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-black);
+  color: var(--text-color);
+}
+
+.auth-heading {
+  margin-top: var(--space-5);
+  text-align: center;
+}
+
+.auth-heading .page-header__title {
+  font-size: var(--font-size-2xl);
+}
+
+.auth-heading .page-header__subtitle {
+  margin-top: var(--space-2);
+}
+
+.auth-card {
+  width: 100%;
+  margin-top: var(--space-8);
+}
+
+.auth-card .card {
+  padding: var(--space-6);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  text-align: center;
+}
+
+.auth-actions__register {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.auth-actions__link {
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.auth-actions__link--primary {
+  color: var(--primary-color);
+}
+
+.auth-actions__link--primary:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.auth-actions__link--muted {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--muted-text-color);
+}
+
+.auth-actions__link--muted:hover {
+  color: var(--text-color);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .auth-main {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .auth-card .card {
+    padding: var(--space-4);
+  }
+}
+
 /* ── Horizontal card rail ───────────────────────────────────────────── */
 
 .rail {

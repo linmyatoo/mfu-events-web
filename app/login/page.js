@@ -15,28 +15,40 @@ export default async function LoginPage() {
   if (await getSession()) redirect('/');
 
   return (
-    <main className="app-main">
-      <div className="page-container">
-        <div className="page-header">
-          <span className="app-header__brand">
-            <span className="app-header__logo">
-              <Image src="/mfu-logo.png" alt="" width={44} height={44} />
-            </span>
-            <span>MFU-Events</span>
+    <main className="auth-main">
+      <div className="auth-shell">
+        <div className="auth-brand">
+          <span className="auth-brand__logo">
+            <Image src="/mfu-logo.png" alt="" width={72} height={72} priority />
           </span>
+          <span className="auth-brand__name">MFU-Events</span>
+        </div>
+
+        <div className="auth-heading">
           <h1 className="page-header__title">Sign in</h1>
           <p className="page-header__subtitle">
             Use your university account to see the events open to you.
           </p>
         </div>
 
-        <LoginForm />
+        <div className="auth-card">
+          <LoginForm />
+        </div>
 
-        <p className="field__hint">
-          Don&apos;t have an account? <Link href="/register">Register</Link>
-          {' · '}
-          <Link href="/forgot-password">Forgot password?</Link>
-        </p>
+        <div className="auth-actions">
+          <p className="auth-actions__register">
+            Don&apos;t have an account?{' '}
+            <Link href="/register" className="auth-actions__link auth-actions__link--primary">
+              Register
+            </Link>
+          </p>
+          <Link
+            href="/forgot-password"
+            className="auth-actions__link auth-actions__link--muted"
+          >
+            Forgot password?
+          </Link>
+        </div>
       </div>
     </main>
   );
