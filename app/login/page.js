@@ -19,7 +19,7 @@ export default async function LoginPage() {
       <div className="auth-shell">
         <div className="auth-brand">
           <span className="auth-brand__logo">
-            <Image src="/mfu-logo.png" alt="" width={72} height={72} priority />
+            <Image src="/mfu-logo.png" alt="" width={92} height={92} priority />
           </span>
           <span className="auth-brand__name">MFU-Events</span>
         </div>
