@@ -29,6 +29,25 @@ export default function EventReview({ event }) {
           ? { tone: 'info', text: result.error }
           : { tone: 'success', text: 'Done.' }
       );
+
+      // Approve reveals the venue section further down the page (same
+      // route — no navigation). Carry the admin straight to it instead of
+      // leaving them looking at a sidebar that just lost its only button.
+      // The section mounts once the server-action revalidation commits —
+      // in dev that RSC refetch can take a second or more, so poll on a
+      // wall-clock timer rather than a handful of animation frames.
+      if (!result?.error && step === 'approve') {
+        let attempts = 0;
+        const tryScroll = () => {
+          const target = document.getElementById('venue-heading');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else if (attempts++ < 40) {
+            setTimeout(tryScroll, 150);
+          }
+        };
+        tryScroll();
+      }
     });
   }
 
